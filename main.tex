@@ -13,7 +13,7 @@
 \usepackage{enumitem} % Better control over lists spacing
 \usepackage{amsmath} % Required for \text{} in equations
 
-% Load hyperref for clickable TOC, citations, and links (all black as requested)
+% Load hyperref for clickable TOC, citations, and links (all black)
 \usepackage[colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black]{hyperref}
 
 % Set paragraph styles: no paragraph indentation and no paragraph skip
@@ -46,7 +46,7 @@
   {\thesubsection}{1em}{}
 \titlespacing*{\subsection}{0pt}{8pt}{4pt}
 
-% Configure Listings for Code Display (Slightly smaller to save vertical space)
+% Configure Listings for Code Display
 \definecolor{codegray}{rgb}{0.95,0.95,0.95}
 \definecolor{codecomment}{rgb}{0.0,0.5,0.0}
 \definecolor{codekeyword}{rgb}{0.0,0.0,0.8}
@@ -73,7 +73,7 @@
 }
 
 % Customize Contents title and depth (tocdepth=1 keeps it exactly on 1 page)
-\renewcommand{\contentsname}{\fontsize{20}{24}\selectfont\bfseries\itshape Contents}
+\renewcommand{\contentsname}{Contents}
 \renewcommand{\bibname}{References}
 \setcounter{tocdepth}{1}
 
@@ -183,6 +183,19 @@ MEMS & Micro-Electro-Mechanical Systems \\ \hline
 \vspace{0.1in}
 \begingroup
 \renewcommand{\clearpage}{\relax}
+\makeatletter
+\renewcommand{\chapter}{\@ifstar{\@chapterstar}{\@chapternostar}}
+\newcommand{\@chapterstar}[1]{%
+  \vspace{10pt}%
+  {\normalfont\fontsize{15}{18}\selectfont\bfseries\raggedright #1}\par%
+  \nopagebreak\vspace{6.0pt}%
+}
+\newcommand{\@chapternostar}[2][]{%
+  \vspace{10pt}%
+  {\normalfont\fontsize{15}{18}\selectfont\bfseries\raggedright #2}\par%
+  \nopagebreak\vspace{6.0pt}%
+}
+\makeatother
 \listoffigures
 \vspace{0.3in}
 \listoftables
@@ -254,7 +267,7 @@ Microcontrollers process sensor inputs and coordinate motor drivers. This projec
 The sensor detects hand tilt by measuring acceleration along its axes. The MPU6050 6-axis IMU is utilized in this design \cite{imu_main}. The MPU6050 combines a 3-axis accelerometer and a 3-axis gyroscope on a single silicon die. The accelerometer measures the projection of gravitational acceleration along the X, Y, and Z axes, which allows the microcontroller to compute static tilt angles (Pitch and Roll). The gyroscope measures the angular rate of rotation around these axes, which is crucial for tracking dynamic wrist rotation (Yaw). It communicates with the ESP32 over an I2C serial bus, ensuring high noise immunity. Figure \ref{fig:comp_tx} shows the transmitter components.
 \vspace{0.1in}
 \begin{center}
-\includegraphics[width=0.42\textwidth,height=4.0cm,keepaspectratio=true]{images/comp-img1.jpeg}
+\includegraphics[width=0.5\textwidth,height=5.2cm,keepaspectratio=true]{images/comp-img1.jpeg}
 \captionof{figure}{Transmitter Hardware Assembly showing ESP32, MPU6050, and Wearable Assembly}
 \label{fig:comp_tx}
 \end{center}
@@ -270,7 +283,7 @@ The motors require more current than microcontroller pins can supply.
 \end{enumerate}
 \vspace{0.05in}
 \begin{center}
-\includegraphics[width=0.42\textwidth,height=4.0cm,keepaspectratio=true]{images/comp-img2.jpeg}
+\includegraphics[width=0.5\textwidth,height=5.2cm,keepaspectratio=true]{images/comp-img2.jpeg}
 \captionof{figure}{Receiver Hardware Assembly with Dual L298N Motor Drivers and ESP32 Receiver Module}
 \label{fig:comp_rx}
 \end{center}
@@ -285,7 +298,7 @@ Two 18650 Lithium-Ion cells in series provide a 7.4V pack to power the motor dri
 The transmitter module reads hand tilt and sends movement codes wirelessly. The MPU6050 accelerometer detects changes in gravity along the X and Y axes as the hand tilts. The transmitter ESP32 communicates with the MPU6050 via the hardware I2C bus. The connections are wired as follows: VCC of MPU6050 is connected to the 3.3V pin of the ESP32, GND is connected to the common ground (GND), SCL is connected to GPIO 22, and SDA is connected to GPIO 21. Table \ref{tab:mpu_conn} details these connections. The code compares these readings against calibrated thresholds to determine if the hand is tilted forward, backward, left, or right. Figure \ref{fig:block_diag} shows the overall system block diagram.\par
 \vspace{0.1in}
 \begin{center}
-\includegraphics[width=0.6\textwidth,height=4.0cm,keepaspectratio=true]{images/block-diagram.png}
+\includegraphics[width=0.85\textwidth,height=6.0cm,keepaspectratio=true]{images/block-diagram.png}
 \captionof{figure}{Gesture-Controlled Car System Block Diagram showing the ESP32 transmitter and receiver architecture}
 \label{fig:block_diag}
 \end{center}
@@ -308,7 +321,7 @@ SDA & GPIO 21 & I2C Serial Data \\ \hline
 The receiver chassis decodes the ESP-NOW signals and drives the motors. The receiver ESP32 decodes the signals and determines the movement state. It then controls two L298N motor drivers. Since this is a 4-wheel drive car, the motors are paired: the front-left and back-left motors are driven together, and the front-right and back-right motors are driven together. Figure \ref{fig:l298n_bb} shows the wiring connections between the ESP32 and the L298N motor driver. The pins are configured as shown in Tables \ref{tab:pins_front} and \ref{tab:pins_back}.\par
 \vspace{0.1in}
 \begin{center}
-\includegraphics[width=0.6\textwidth,height=4.0cm,keepaspectratio=true]{images/l298n_motordriver_pinout_bb.png}
+\includegraphics[width=0.85\textwidth,height=6.2cm,keepaspectratio=true]{images/l298n_motordriver_pinout_bb.png}
 \captionof{figure}{Fritzing Wiring Diagram showing L298N Motor Driver connections to ESP32 Receiver}
 \label{fig:l298n_bb}
 \end{center}
@@ -553,14 +566,14 @@ Right Tilt & 310 -- 350 & $>$ 370 & Steer Right \\ \hline
 \begin{center}
 \begin{minipage}{0.48\textwidth}
   \centering
-  \includegraphics[width=\textwidth,height=5.2cm,keepaspectratio=true]{images/img1.jpeg}
+  \includegraphics[width=\textwidth,height=6.5cm,keepaspectratio=true]{images/img1.jpeg}
   \captionof{figure}{Assembled 4WD Robot Car}
   \label{fig:assembled_car}
 \end{minipage}
 \hfill
 \begin{minipage}{0.48\textwidth}
   \centering
-  \includegraphics[width=\textwidth,height=5.2cm,keepaspectratio=true]{images/img2.jpeg}
+  \includegraphics[width=\textwidth,height=6.5cm,keepaspectratio=true]{images/img2.jpeg}
   \captionof{figure}{Wearable Control Glove}
   \label{fig:glove}
 \end{minipage}
@@ -572,21 +585,21 @@ The prototype was evaluated on latency, range, and battery life. The ESP-NOW sys
 \begin{center}
 \begin{minipage}{0.31\textwidth}
   \centering
-  \includegraphics[width=\textwidth,height=4.2cm,keepaspectratio=true]{images/img3.jpeg}
+  \includegraphics[width=\textwidth,height=5.5cm,keepaspectratio=true]{images/img3.jpeg}
   \captionof{figure}{Wiring Details}
   \label{fig:wiring}
 \end{minipage}
 \hfill
 \begin{minipage}{0.31\textwidth}
   \centering
-  \includegraphics[width=\textwidth,height=4.2cm,keepaspectratio=true]{images/img4.jpeg}
+  \includegraphics[width=\textwidth,height=5.5cm,keepaspectratio=true]{images/img4.jpeg}
   \captionof{figure}{Circuit Test}
   \label{fig:test}
 \end{minipage}
 \hfill
 \begin{minipage}{0.31\textwidth}
   \centering
-  \includegraphics[width=\textwidth,height=4.2cm,keepaspectratio=true]{images/img5.jpeg}
+  \includegraphics[width=\textwidth,height=5.5cm,keepaspectratio=true]{images/img5.jpeg}
   \captionof{figure}{Battery Mount}
   \label{fig:battery}
 \end{minipage}

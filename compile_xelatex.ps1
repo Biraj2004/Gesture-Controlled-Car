@@ -67,15 +67,19 @@ foreach ($pattern in $auxExtensions) {
 $finalName = "Gesture-Controlled-Car-MiniProject.pdf"
 $finalPath = Join-Path $scriptDir $finalName
 if (Test-Path $finalPath) {
-    for ($i = 0; $i -lt 5; $i++) {
-        try {
-            Remove-Item $finalPath -Force -ErrorAction Stop
-            break
-        } catch {
-            Start-Sleep -Milliseconds 500
-        }
+    try {
+        Remove-Item $finalPath -Force -ErrorAction Stop
+    } catch {
+        Write-Error "ERROR: Target file '$finalName' is locked."
+        Write-Host "Please close the PDF file in your viewer (Acrobat, Browser, etc.) and re-run compilation." -ForegroundColor Yellow
+        exit 1
     }
 }
-Rename-Item -Path (Join-Path $scriptDir "main.pdf") -NewName $finalName -Force
+try {
+    Rename-Item -Path (Join-Path $scriptDir "main.pdf") -NewName $finalName -Force
+} catch {
+    Write-Error "ERROR: Failed to rename main.pdf to $finalName."
+    exit 1
+}
 
 Write-Host "Final PDF: $finalPath" -ForegroundColor Green
