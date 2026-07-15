@@ -251,7 +251,7 @@ Microcontrollers & Two ESP32 Dev Boards (Transmitter \& Receiver) \\ \hline
 Sensor Type & MPU6050 (6-Axis Digital I2C Gyro/Accelerometer) \\ \hline
 Wireless Protocol & ESP-NOW (2.4 GHz Peer-to-Peer, Connectionless) \\ \hline
 Chassis Motors & Four 200 RPM Dual Shaft BO Geared Motors \\ \hline
-Motor Drivers & Dual L298N H-Bridge Motor Drivers (Front \& Back) \\ \hline
+Micro-controller Interfacing & Direct GPIO lines to Dual L298N drivers \\ \hline
 Typical Latency & 5 -- 15 ms \\ \hline
 Noise Immunity & High (CRC check, frequency hopping, direct pairing) \\ \hline
 \end{tabular}
@@ -298,14 +298,15 @@ Two 18650 Lithium-Ion cells in series provide a 7.4V pack to power the motor dri
 % ==================== PAGE 12: CHAPTER 3: SYSTEM DESIGN ====================
 \chapter{System Design and Circuit Integration}
 \section{Transmitter Schematic and Connections}
-The transmitter module reads hand tilt and sends movement codes wirelessly. The MPU6050 accelerometer detects changes in gravity along the X and Y axes as the hand tilts. The transmitter ESP32 communicates with the MPU6050 via the hardware I2C bus. The connections are wired as follows: VCC of MPU6050 is connected to the 3.3V pin of the ESP32, GND is connected to the common ground (GND), SCL is connected to GPIO 22, and SDA is connected to GPIO 21. Table \ref{tab:mpu_conn} details these connections. The code compares these readings against calibrated thresholds to determine if the hand is tilted forward, backward, left, or right. Figure \ref{fig:block_diag} shows the overall system block diagram.\par
-\vspace{0.1in}
+The transmitter module reads hand tilt and sends movement codes wirelessly. The MPU6050 accelerometer detects changes in gravity along the X and Y axes as the hand tilts. The transmitter ESP32 communicates with the MPU6050 via the hardware I2C bus. The connections are wired as follows: VCC of MPU6050 is connected to the 3.3V pin of the ESP32, GND is connected to the common ground (GND), SCL is connected to GPIO 22, and SDA is connected to GPIO 21. The code compares these readings against calibrated thresholds to determine if the hand is tilted forward, backward, left, or right. Figure \ref{fig:block_diag} shows the overall system block diagram.\par
+\vspace{0.15in}
 \begin{center}
-\includegraphics[width=0.92\textwidth,height=6.6cm,keepaspectratio=true]{images/block-diagram.png}
+\includegraphics[width=1.0\textwidth,height=9.2cm,keepaspectratio=true]{images/block-diagram.png}
 \captionof{figure}{Gesture-Controlled Car System Block Diagram showing the ESP32 transmitter and receiver architecture}
 \label{fig:block_diag}
 \end{center}
-\vspace{0.05in}
+\clearpage
+
 \begin{center}
 \begin{tabular}{|C{4.0cm}|C{4.0cm}|C{6.0cm}|}
 \hline
@@ -322,9 +323,9 @@ SDA & GPIO 21 & I2C Serial Data \\ \hline
 
 \section{Receiver Schematic and Connections}
 The receiver chassis decodes the ESP-NOW signals and drives the motors. The receiver ESP32 decodes the signals and determines the movement state. It then controls two L298N motor drivers. Since this is a 4-wheel drive car, the motors are paired: the front-left and back-left motors are driven together, and the front-right and back-right motors are driven together. Figure \ref{fig:l298n_bb} shows the wiring connections between the ESP32 and the L298N motor driver. The pins are configured as shown in Tables \ref{tab:pins_front} and \ref{tab:pins_back}.\par
-\vspace{0.1in}
+\vspace{0.15in}
 \begin{center}
-\includegraphics[width=0.85\textwidth,height=6.2cm,keepaspectratio=true]{images/l298n_motordriver_pinout_bb.png}
+\includegraphics[width=0.95\textwidth,height=7.8cm,keepaspectratio=true]{images/l298n_motordriver_pinout_bb.png}
 \captionof{figure}{Fritzing Wiring Diagram showing L298N Motor Driver connections to ESP32 Receiver}
 \label{fig:l298n_bb}
 \end{center}
@@ -393,13 +394,14 @@ Stop & Stop & Stop & Stop & Stop \\ \hline
 \label{tab:mecanum_matrix}
 \end{center}
 
+\newpage
 \section{Power Scheme and Common Grounding}
 To prevent voltage spikes from the DC motors from resetting the microcontrollers, a split power delivery configuration is implemented. The battery positive terminal supplies power directly to the L298N motor driver boards. The L298N's onboard 5V regulator steps down the input voltage to supply regulated 5V to the Arduino and ESP32 boards. Connecting the GND terminals of all boards and drivers is essential to establish a common references level.
-\clearpage
 
 % ==================== PAGE 15: CHAPTER 4: SOFTWARE IMPLEMENTATION ====================
 \chapter{Software Implementation and Control Algorithms}
 \section{Development Environment}
+\label{sec:dev_env}
 The control firmware was developed using the Arduino IDE 2.x and written in C++ with standard microcontroller libraries:
 \begin{itemize}[noitemsep,topsep=2pt,parsep=0pt,partopsep=0pt]
     \item \textbf{Wire.h}: Enables I2C communication between the ESP32 and the MPU6050 sensor.
