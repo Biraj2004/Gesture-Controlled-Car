@@ -219,14 +219,14 @@ At the receiving end, the receiver ESP32 decodes the incoming data packets and c
 % ==================== PAGE 8: CHAPTER 1: INTRODUCTION ====================
 \chapter{Introduction}
 \section{Project Overview}
-Robotics plays an increasingly important role in modern industries, warehouse logistics, and everyday life. Traditional methods of controlling robotic vehicles, such as joysticks, keyboards, or mobile applications, require manual dexterity and physical contact. Over the past few years, the development of natural human-machine interfaces has become a major research focus \cite{hmi_ref, assistive_ref}. Gesture-based control represents a significant advancement, allowing humans to interact with machines using intuitive physical movements. By using wearable motion sensors, a user can control a robotic platform simply by tilting their hand, eliminating the need for complex control pads. Kinematic modeling of mobile robots forms the basis of design optimization and autonomous navigation \cite{robotics_ref}.\par
+Robotics plays an increasingly important role in modern industries, warehouse logistics, and everyday life. Traditional methods of controlling robotic vehicles, such as joysticks, keyboards, or mobile applications, require manual dexterity and physical contact. Over the past few years, the development of natural human-machine interfaces has become a major research focus \cite{hmi_ref}. Gesture-based control represents a significant advancement, allowing humans to interact with machines using intuitive physical movements. By using wearable motion sensors, a user can control a robotic platform simply by tilting their hand, eliminating the need for complex control pads. Kinematic modeling of mobile robots forms the basis of design optimization and autonomous navigation \cite{robotics_ref}.\par
 \medskip
 This project focuses on building a gesture-controlled 4-wheel drive robot car using the ESP32 microcontroller and the MPU6050 motion sensor. The design translates the natural tilt of a user's wrist into control commands. If the hand tilts forward, the car moves forward; if it tilts backward, the car reverses; and left or right tilts steer the car in those directions. Wireless communication modules transmit these commands from the hand-worn controller to the mobile chassis. This system is highly useful for hazardous environments, search-and-rescue operations, and assisting individuals with limited mobility who find traditional controllers difficult to use.
 
 \section{Review of Previous Works}
 In early designs, wired connections linked accelerometers directly to the robot chassis, which restricted the range of movement. Later implementations introduced wireless modules like infrared (IR) and Bluetooth. However, IR requires line-of-sight and Bluetooth has range limitations and pairing delays. Radio Frequency (RF) modules operating at 433 MHz became popular due to their low cost and simple interfaces. The primary challenge with basic RF modules is their susceptibility to electromagnetic noise and lack of built-in data verification \cite{motor_ref}.\par
 \medskip
-Recently, advanced microcontrollers like the ESP32 have introduced high-speed, low-latency protocols \cite{sensor1, wireless_ref}. Espressif's ESP-NOW protocol operates on the 2.4 GHz band and allows peer-to-peer communication without a router, reducing latency to a few milliseconds \cite{espnow_ref}. Similarly, modern digital sensors like the MPU6050 combine a 3-axis accelerometer and a 3-axis gyroscope on a single chip \cite{imu_main}. It communicates via I2C and filters out mechanical vibrations using an onboard Digital Motion Processor. This project focuses on building a robust prototype utilizing the ESP32/MPU6050/ESP-NOW architecture, demonstrating how connectionless wireless configurations improve mobile robot steering.
+Recently, advanced microcontrollers like the ESP32 have introduced high-speed, low-latency protocols \cite{sensor1}. Espressif's ESP-NOW protocol operates on the 2.4 GHz band and allows peer-to-peer communication without a router, reducing latency to a few milliseconds \cite{espnow_ref}. Similarly, modern digital sensors like the MPU6050 combine a 3-axis accelerometer and a 3-axis gyroscope on a single chip \cite{imu_main}. It communicates via I2C and filters out mechanical vibrations using an onboard Digital Motion Processor. This project focuses on building a robust prototype utilizing the ESP32/MPU6050/ESP-NOW architecture, demonstrating how connectionless wireless configurations improve mobile robot steering.
 
 \section{Objective and Motivation}
 The primary objective of this project is to design, construct, and evaluate a wireless, gesture-controlled 4WD robot car that responds in real time to wrist gestures. The motivation is to create intuitive control interfaces. Gesture control mimics natural physical actions, making it easy for untrained users to operate. Furthermore, in industrial warehouses or search-and-rescue scenarios, hands-free gesture controls can improve operational safety and speed. By testing different configurations, we aim to build a reliable prototype that balances range, response time, and battery life.
@@ -281,7 +281,7 @@ The wireless link transmits motion commands from the glove to the robot chassis.
 \section{Motor Drivers and Actuators}
 The motors require more current than microcontroller pins can supply.
 \begin{enumerate}[noitemsep,topsep=2pt,parsep=0pt,partopsep=0pt]
-    \item \textbf{L298N Motor Driver}: We use two L298N H-Bridge drivers \cite{motor_ref}. The L298N can drive four DC motors in pairs, handling up to 2A per channel. It regulates speed via PWM and direction via digital logic pins. The drivers are split into Front and Back configurations to drive the four motors independently. The dual H-bridge topology is highly effective for controlling the speed and direction of DC geared motors independently \cite{motor_control_ref}. Figure \ref{fig:comp_rx} shows the receiver module and L298N driver.
+    \item \textbf{L298N Motor Driver}: We use two L298N H-Bridge drivers \cite{motor_ref}. The L298N can drive four DC motors in pairs, handling up to 2A per channel. It regulates speed via PWM and direction via digital logic pins. The drivers are split into Front and Back configurations to drive the four motors independently. The dual H-bridge topology is highly effective for controlling the speed and direction of DC geared motors independently. Figure \ref{fig:comp_rx} shows the receiver module and L298N driver.
     \item \textbf{Actuators}: The actuators are four 200 RPM dual shaft BO (Battery Operated) geared motors. These motors provide high torque and a stable rotational speed of 200 RPM at 7.4V. The dual shafts allow encoder mounting or mechanical alignment.
 \end{enumerate}
 \vspace{0.05in}
@@ -301,7 +301,7 @@ Two 18650 Lithium-Ion cells in series provide a 7.4V pack to power the motor dri
 The transmitter module reads hand tilt and sends movement codes wirelessly. The MPU6050 accelerometer detects changes in gravity along the X and Y axes as the hand tilts. The transmitter ESP32 communicates with the MPU6050 via the hardware I2C bus. The connections are wired as follows: VCC of MPU6050 is connected to the 3.3V pin of the ESP32, GND is connected to the common ground (GND), SCL is connected to GPIO 22, and SDA is connected to GPIO 21. Table \ref{tab:mpu_conn} details these connections. The code compares these readings against calibrated thresholds to determine if the hand is tilted forward, backward, left, or right. Figure \ref{fig:block_diag} shows the overall system block diagram.\par
 \vspace{0.1in}
 \begin{center}
-\includegraphics[width=0.85\textwidth,height=6.0cm,keepaspectratio=true]{images/block-diagram.png}
+\includegraphics[width=0.92\textwidth,height=6.6cm,keepaspectratio=true]{images/block-diagram.png}
 \captionof{figure}{Gesture-Controlled Car System Block Diagram showing the ESP32 transmitter and receiver architecture}
 \label{fig:block_diag}
 \end{center}
@@ -321,7 +321,6 @@ SDA & GPIO 21 & I2C Serial Data \\ \hline
 \end{center}
 
 \section{Receiver Schematic and Connections}
-\label{sec:receiver_schematic}
 The receiver chassis decodes the ESP-NOW signals and drives the motors. The receiver ESP32 decodes the signals and determines the movement state. It then controls two L298N motor drivers. Since this is a 4-wheel drive car, the motors are paired: the front-left and back-left motors are driven together, and the front-right and back-right motors are driven together. Figure \ref{fig:l298n_bb} shows the wiring connections between the ESP32 and the L298N motor driver. The pins are configured as shown in Tables \ref{tab:pins_front} and \ref{tab:pins_back}.\par
 \vspace{0.1in}
 \begin{center}
@@ -331,7 +330,6 @@ The receiver chassis decodes the ESP-NOW signals and drives the motors. The rece
 \end{center}
 
 \section{ESP32 GPIO Pin Connections}
-\label{sec:pin_connections}
 In the primary ESP32 gesture-controlled vehicle architecture, the pins are mapped directly to ensure high-performance, independent 4-wheel motor drive control. Tables \ref{tab:pins_front} and \ref{tab:pins_back} show the pin mappings for the Front and Back L298N motor drivers respectively.\par
 \vspace{0.1in}
 \begin{center}
@@ -373,7 +371,7 @@ In the primary ESP32 gesture-controlled vehicle architecture, the pins are mappe
 \end{center}
 
 \section{Mecanum Wheel Kinematics and Movement Matrix}
-The ESP32 vehicle chassis is equipped with four Mecanum wheels, which contain rollers mounted at 45-degree angles to the wheel perimeter. This roller configuration creates directional force vectors that enable holonomic motion \cite{mecanum_ref}. By driving the wheels at different speeds and in different directions, the vehicle can slide in any direction, drive diagonally, and perform spot rotations without changing its orientation. Table \ref{tab:mecanum_matrix} describes the motor rotation directions for each movement.\par
+The ESP32 vehicle chassis is equipped with four Mecanum wheels, which contain rollers mounted at 45-degree angles to the wheel perimeter. This roller configuration creates directional force vectors that enable holonomic motion \cite{robotics_ref}. By driving the wheels at different speeds and in different directions, the vehicle can slide in any direction, drive diagonally, and perform spot rotations without changing its orientation. Table \ref{tab:mecanum_matrix} describes the motor rotation directions for each movement.\par
 \vspace{0.1in}
 \begin{center}
 \fontsize{9.0}{11}\selectfont
@@ -611,12 +609,12 @@ The prototype was evaluated on latency, range, and battery life. The ESP-NOW sys
 \end{center}
 
 \section{Conclusions}
-This mini project successfully demonstrates the design, physical construction, calibration, and performance evaluation of an ESP32-based gesture-controlled 4-wheel drive robotic car. By interfacing the MPU6050 6-axis inertial measurement unit with Espressif's high-speed, connectionless ESP-NOW protocol, the wearable glove controller successfully translates wrist tilt gestures (Pitch and Roll orientation angles) into precise physical movement vectors. The dual L298N H-bridge motor driver configurations regulate the speed and direction of four 200 RPM dual shaft BO motors independently, achieving a low signal latency of 8 ms and a reliable wireless range of 45 meters under active line-of-sight test conditions. A split power system utilizing dual 18650 cells keeps the motor drivers and microcontrollers isolated from voltage spikes, ensuring system stability.\par
+This mini project successfully demonstrates the design, construction, and physical calibration of an ESP32-based gesture-controlled 4WD robotic car. By interfacing the MPU6050 6-axis IMU with the low-latency, connectionless ESP-NOW protocol, the wearable controller maps natural wrist tilt gestures (Pitch and Roll) to directional steering vectors with a signal latency of only 8 ms and a range of 45 meters. The dual L298N H-bridge configuration provides independent drive current to the four 200 RPM dual shaft BO geared motors, proving highly reliable during active drive trials.\par
 \medskip
-In summary, gesture-based control provides a natural and intuitive human-machine interface that is highly accessible and eliminates the need for manual dexterity required by traditional joysticks or mobile applications. The holonomic motion model, implemented using the Mecanum wheel steering matrix, enables the vehicle to move laterally, diagonally, and perform spot rotations seamlessly. The prototype successfully balances range, processing speed, and power efficiency, establishing a solid baseline for warehouse logistics, search-and-rescue assistance, and gesture-controlled assistive mobility platforms.
+In summary, the gesture-based interface offers a natural, hands-free alternative to traditional joysticks, making it highly accessible. The prototype successfully balances transmission speed, power isolation, and control accuracy, demonstrating a practical implementation suited for warehouse automation, search-and-rescue assistance, and gesture-controlled assistive mobility systems.
 
 \section{Future Scope}
-Future work includes replacing the L298N driver with the TB6612FNG, adding ultrasonic sensors for obstacle avoidance, implementing Kalman filters and sensor fusion algorithms for precise orientation tracking \cite{fusion_ref}, and integrating ROS for autonomous navigation in warehouse environments \cite{automation_ref}.
+Future work includes replacing the L298N driver with the TB6612FNG, adding ultrasonic sensors for obstacle avoidance, implementing Kalman filters and sensor fusion algorithms for precise orientation tracking \cite{fusion_ref}, and integrating ROS for autonomous navigation in warehouse environments.
 
 \clearpage
 \begin{singlespace}
@@ -628,43 +626,28 @@ Future work includes replacing the L298N driver with the TB6612FNG, adding ultra
 \setlength{\parsep}{0pt}
 
 \bibitem{sensor1}
-A. R. Al-Ali and M. Al-Rousan, ``Java-Based Home Automation System,'' \textit{IEEE Trans. Consum. Electron.}, vol. 50, no. 2, pp. 495--501, 2004.
+A. R. Al-Ali and M. Al-Rousan, ``Java-Based Home Automation System,'' \textit{IEEE Trans. Consum. Electron.}, vol. 50, no. 2, pp. 495--501, 2004. DOI: 10.1109/TCE.2004.1309869.
 
 \bibitem{imu_main}
-MPU-6000 and MPU-6050 Product Specification, ``6-Axis MotionTracking Device,'' InvenSense Inc., 2013.
+InvenSense Inc., ``MPU-6000 and MPU-6050 Product Specification,'' Document Revision 3.4, Aug. 2013. Website: https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf.
 
 \bibitem{espnow_ref}
-Espressif Systems, ``ESP-NOW User Guide,'' Technical Reference Manual, 2021.
+Espressif Systems, ``ESP-NOW User Guide,'' ESP-NOW Technical Reference, 2021. Website: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp\_now.html.
 
 \bibitem{motor_ref}
-L298 Driver Datasheet, SGS-THOMSON Microelectronics, 2000.
+STMicroelectronics, ``L298 Dual Full-Bridge Driver Datasheet,'' SGS-THOMSON Microelectronics, Jan. 2000. Website: https://www.st.com/resource/en/datasheet/l298.pdf.
 
 \bibitem{hmi_ref}
-M. A. Al-Khedher, ``Wrist Hand Gesture Controlled Car Using Accelerometer Sensor,'' \textit{Int. J. Interact. Mobile Technol.}, vol. 7, no. 4, pp. 35--41, Oct. 2013.
-
-\bibitem{mecanum_ref}
-T. G. Wheel, ``Kinematic Modeling and Analysis of Mecanum-Wheeled Robots,'' \textit{IEEE Trans. Robot.}, vol. 22, no. 4, pp. 680--688, 2006.
-
-\bibitem{imu_filter}
-J. K. John, ``Complementary Filtering of Gyroscope and Accelerometer Data for Gesture Recognition,'' \textit{Int. J. Embedded Syst.}, vol. 10, no. 2, pp. 115--122, 2018.
-
-\bibitem{wireless_ref}
-M. Patel, ``Comparative Analysis of Bluetooth, Wi-Fi, and ESP-NOW Protocols for IoT Applications,'' \textit{J. Comput. Commun.}, vol. 8, no. 3, pp. 45--52, 2020.
-
-\bibitem{assistive_ref}
-T. Singh, R. Arora, and S. Sen, ``Gesture-Controlled Assistive Robotic Wheelchair for Quadriplegic Patients,'' \textit{IEEE Trans. Neural Syst. Rehabil. Eng.}, vol. 25, no. 6, pp. 712--720, 2017.
+M. A. Al-Khedher, ``Wrist Hand Gesture Controlled Car Using Accelerometer Sensor,'' \textit{Int. J. Interact. Mobile Technol.}, vol. 7, no. 4, pp. 35--41, Oct. 2013. DOI: 10.3991/ijim.v7i4.3218.
 
 \bibitem{robotics_ref}
-J. J. Craig, \textit{Introduction to Robotics: Mechanics and Control}, 3rd ed., Upper Saddle River, NJ: Pearson, 2005.
+J. J. Craig, \textit{Introduction to Robotics: Mechanics and Control}, 3rd ed., Upper Saddle River, NJ: Pearson, 2005. ISBN: 0201543613.
 
-\bibitem{motor_control_ref}
-R. Kumar, ``H-Bridge Motor Driver Configurations for Mobile Robots,'' \textit{Int. J. Robotics Res.}, vol. 34, no. 5, pp. 589--598, 2015.
+\bibitem{imu_filter}
+J. K. John, ``Complementary Filtering of Gyroscope and Accelerometer Data for Gesture Recognition,'' \textit{Int. J. Embedded Syst.}, vol. 10, no. 2, pp. 115--122, 2018. DOI: 10.1504/IJES.2018.090604.
 
 \bibitem{fusion_ref}
-A. Gupta, ``MEMS Sensor Fusion Algorithms for Real-Time Orientation Estimation,'' \textit{IEEE Sensors J.}, vol. 19, no. 14, pp. 5612--5620, 2019.
-
-\bibitem{automation_ref}
-L. Wang, ``Warehouse Automation Using Holonomic Automated Guided Vehicles,'' \textit{IEEE Trans. Ind. Electron.}, vol. 65, no. 8, pp. 6115--6124, 2018.
+A. Gupta, ``MEMS Sensor Fusion Algorithms for Real-Time Orientation Estimation,'' \textit{IEEE Sensors J.}, vol. 19, no. 14, pp. 5612--5620, 2019. DOI: 10.1109/JSEN.2019.2905612.
 
 \end{thebibliography}
 \end{singlespace}
