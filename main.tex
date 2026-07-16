@@ -80,6 +80,10 @@
 \renewcommand{\bibname}{References}
 \setcounter{tocdepth}{1}
 
+\usepackage[titles]{tocloft}
+\renewcommand{\cftchapfont}{\normalfont\bfseries\itshape}
+\renewcommand{\cftchappagefont}{\normalfont\bfseries\itshape}
+
 \begin{document}
 
 % ==================== PAGE 1: TITLE PAGE ====================
@@ -93,11 +97,11 @@
 \vspace{0.8in}
 {\fontsize{14}{18}\selectfont By\par}
 \vspace{0.2in}
-{\fontsize{18}{22}\selectfont\bfseries Sohan Ghosh \\ (Roll No. ....................)\par}
+{\fontsize{18}{22}\selectfont\bfseries Sohan Ghosh \\ (Roll No. 34900323050)\par}
 \vspace{0.8in}
 {\fontsize{14}{18}\selectfont Under the Guidance of\par}
 \vspace{0.2in}
-{\fontsize{16}{20}\selectfont Project Supervisor/(s): .................... \\ Technical Facilitator: ....................\par}
+{\fontsize{16}{20}\selectfont Project Supervisor: Dr. Gautam Das\par}
 \vfill
 {\fontsize{14}{18}\selectfont Department of Electronics and Communication Engineering \\ Cooch Behar Government Engineering College \\ Cooch Behar, West Bengal \\ 2026\par}
 \vspace*{0.2in}
@@ -105,41 +109,28 @@
 
 \pagenumbering{roman}
 
-% ==================== PAGE 2: ACKNOWLEDGEMENT ====================
+% ==================== PAGE 2: ACKNOWLEDGEMENT & MEMBERS ====================
 \newpage
 \chapter*{Acknowledgement}
 \addcontentsline{toc}{chapter}{Acknowledgement}
-\vspace{0.2in}
-First and foremost, I would like to express my deep sense of gratitude to our project supervisor and the Department of Electronics and Communication Engineering at Cooch Behar Government Engineering College for providing me with the opportunity to work on this interesting mini project. Their constant guidance, technical feedback, and continuous support have been instrumental in the successful completion of this design and prototype realization.\par
+\vspace{0.1in}
+First and foremost, I would like to express my deep sense of gratitude to our project supervisor, Dr. Gautam Das, and the Department of Electronics and Communication Engineering at Cooch Behar Government Engineering College for providing me with the opportunity to work on this interesting mini project. His constant guidance, technical feedback, and continuous support have been instrumental in the successful completion of this design and prototype realization.\par
 \medskip
-I am also very thankful to the technical facilitators and laboratory instructors who provided the necessary electronic components, testing equipment, and workspace to construct and test the robotic vehicle. Their practical advice on circuit wiring, soldering, and troubleshooting wireless signal interference was extremely helpful.\par
-\medskip
-Finally, I would like to thank my family, friends, and peers for their constant encouragement and helpful suggestions throughout the duration of this work. This project has given me valuable experience in hardware-software integration, sensor interfacing, and wireless communication protocols.\par
-\vspace{1.5in}
-\begin{flushright}
-\textbf{Sohan Ghosh} \\
-B.Tech ECE, Year 2026 \\
-Cooch Behar Engineering College
-\end{flushright}
-\clearpage
+I am also very thankful to the technical facilitators and laboratory instructors who provided the necessary electronic components, testing equipment, and workspace to construct and test the robotic vehicle. Finally, I would like to thank my family, friends, and peers for their constant encouragement and support throughout this work, which has given me valuable experience in hardware-software integration, sensor interfacing, and wireless communication protocols.\par
 
-% ==================== PAGE 3: PROJECT MEMBERS ====================
-\chapter*{Project Members}
-\addcontentsline{toc}{chapter}{Project Members}
 \vspace{0.2in}
-This mini project has been carried out and completed by the following student members of the Department of Electronics and Communication Engineering, Cooch Behar Government Engineering College. The signatures below certify that this report represents the original work done by the respective members.\par
-\vspace{0.8in}
-\begin{table}[h!]
-\centering
+\section*{Project Members}
+\vspace{0.05in}
+\begin{center}
 \begin{tabular}{|C{4.5cm}|C{5.0cm}|C{5.0cm}|}
 \hline
 \textbf{Roll No.} & \textbf{Name of the Member} & \textbf{Signature of the Member} \\ \hline
-.................... & Sohan Ghosh & \rule{0pt}{5ex} \\ \hline
-.................... & .................... & \rule{0pt}{5ex} \\ \hline
-.................... & .................... & \rule{0pt}{5ex} \\ \hline
-.................... & .................... & \rule{0pt}{5ex} \\ \hline
+34900323050 & Sohan Ghosh & \rule{0pt}{4ex} \\ \hline
+.................... & .................... & \rule{0pt}{4ex} \\ \hline
+.................... & .................... & \rule{0pt}{4ex} \\ \hline
+.................... & .................... & \rule{0pt}{4ex} \\ \hline
 \end{tabular}
-\end{table}
+\end{center}
 \clearpage
 
 % ==================== PAGE 4: PUBLICATIONS AND ACRONYMS ====================
@@ -175,7 +166,12 @@ MEMS & Micro-Electro-Mechanical Systems \\ \hline
 
 % ==================== PAGE 5: TABLE OF CONTENTS ====================
 \begin{singlespace}
+\begingroup
+\titleformat{\chapter}[block]
+  {\normalfont\fontsize{22}{26}\selectfont\bfseries\itshape\raggedright}
+  {}{0pt}{}
 \tableofcontents
+\endgroup
 \end{singlespace}
 \clearpage
 
@@ -301,7 +297,7 @@ Two 18650 Lithium-Ion cells in series provide a 7.4V pack to power the motor dri
 The transmitter module reads hand tilt and sends movement codes wirelessly. The MPU6050 accelerometer detects changes in gravity along the X and Y axes as the hand tilts. The transmitter ESP32 communicates with the MPU6050 via the hardware I2C bus. The connections are wired as follows: VCC of MPU6050 is connected to the 3.3V pin of the ESP32, GND is connected to the common ground (GND), SCL is connected to GPIO 22, and SDA is connected to GPIO 21. The code compares these readings against calibrated thresholds to determine if the hand is tilted forward, backward, left, or right. Figure \ref{fig:block_diag} shows the overall system block diagram.\par
 \vspace{0.15in}
 \begin{center}
-\includegraphics[width=1.0\textwidth,height=9.2cm,keepaspectratio=true]{images/block-diagram.png}
+\makebox[\textwidth][c]{\includegraphics[width=1.1\textwidth,height=10.2cm,keepaspectratio=true]{images/block-diagram.png}}
 \captionof{figure}{Gesture-Controlled Car System Block Diagram showing the ESP32 transmitter and receiver architecture}
 \label{fig:block_diag}
 \end{center}
@@ -325,7 +321,7 @@ SDA & GPIO 21 & I2C Serial Data \\ \hline
 The receiver chassis decodes the ESP-NOW signals and drives the motors. The receiver ESP32 decodes the signals and determines the movement state. It then controls two L298N motor drivers. Since this is a 4-wheel drive car, the motors are paired: the front-left and back-left motors are driven together, and the front-right and back-right motors are driven together. Figure \ref{fig:l298n_bb} shows the wiring connections between the ESP32 and the L298N motor driver. The pins are configured as shown in Tables \ref{tab:pins_front} and \ref{tab:pins_back}.\par
 \vspace{0.15in}
 \begin{center}
-\includegraphics[width=0.95\textwidth,height=7.8cm,keepaspectratio=true]{images/l298n_motordriver_pinout_bb.png}
+\makebox[\textwidth][c]{\includegraphics[width=1.05\textwidth,height=9.2cm,keepaspectratio=true]{images/l298n_motordriver_pinout_bb.png}}
 \captionof{figure}{Fritzing Wiring Diagram showing L298N Motor Driver connections to ESP32 Receiver}
 \label{fig:l298n_bb}
 \end{center}
