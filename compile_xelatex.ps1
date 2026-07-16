@@ -1,11 +1,11 @@
 <#
 .SYNOPSIS
-    Compiles main.tex into main.pdf using XeLaTeX (two passes for correct
+    Compiles Gesture-Controlled-Car-MiniProject.tex into Gesture-Controlled-Car-MiniProject.pdf using XeLaTeX (two passes for correct
     figure/table numbering and citation references).
 
 .DESCRIPTION
     Run this script from anywhere; it locates its own folder and compiles
-    Diabetes_T2DM_Report/main.tex there. Requires xelatex to be available
+    Gesture-Controlled-Car-MiniProject.tex there. Requires xelatex to be available
     on PATH (TeX Live / MiKTeX / TinyTeX).
 
 .EXAMPLE
@@ -33,25 +33,25 @@ if ($xelatex) {
 
 # Remove stale aux/log files from any previous run (possibly with a
 # different LaTeX engine) to avoid corrupted-state compile errors.
-Get-ChildItem -Path $scriptDir -Filter "main.aux" -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
-Get-ChildItem -Path $scriptDir -Filter "main.out" -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
-Get-ChildItem -Path $scriptDir -Filter "main.toc" -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
-Get-ChildItem -Path $scriptDir -Filter "main.log" -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+Get-ChildItem -Path $scriptDir -Filter "Gesture-Controlled-Car-MiniProject.aux" -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+Get-ChildItem -Path $scriptDir -Filter "Gesture-Controlled-Car-MiniProject.out" -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+Get-ChildItem -Path $scriptDir -Filter "Gesture-Controlled-Car-MiniProject.toc" -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+Get-ChildItem -Path $scriptDir -Filter "Gesture-Controlled-Car-MiniProject.log" -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
 
 Write-Host "Using XeLaTeX: $xelatexExe" -ForegroundColor Cyan
-Write-Host "Compiling main.tex (pass 1 of 2)..." -ForegroundColor Cyan
+Write-Host "Compiling Gesture-Controlled-Car-MiniProject.tex (pass 1 of 2)..." -ForegroundColor Cyan
 
-& $xelatexExe -interaction=nonstopmode -halt-on-error main.tex
+& $xelatexExe -interaction=nonstopmode -halt-on-error Gesture-Controlled-Car-MiniProject.tex
 if ($LASTEXITCODE -ne 0) {
-    Write-Error "First XeLaTeX pass failed. See main.log for details."
+    Write-Error "First XeLaTeX pass failed. See Gesture-Controlled-Car-MiniProject.log for details."
     exit $LASTEXITCODE
 }
 
-Write-Host "Compiling main.tex (pass 2 of 2)..." -ForegroundColor Cyan
+Write-Host "Compiling Gesture-Controlled-Car-MiniProject.tex (pass 2 of 2)..." -ForegroundColor Cyan
 
-& $xelatexExe -interaction=nonstopmode -halt-on-error main.tex
+& $xelatexExe -interaction=nonstopmode -halt-on-error Gesture-Controlled-Car-MiniProject.tex
 if ($LASTEXITCODE -ne 0) {
-    Write-Error "Second XeLaTeX pass failed. See main.log for details."
+    Write-Error "Second XeLaTeX pass failed. See Gesture-Controlled-Car-MiniProject.log for details."
     exit $LASTEXITCODE
 }
 
@@ -63,23 +63,5 @@ foreach ($pattern in $auxExtensions) {
     Get-ChildItem -Path $scriptDir -Filter $pattern -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
 }
 
-# Rename the compiled PDF to its final delivery name.
-$finalName = "Gesture-Controlled-Car-MiniProject.pdf"
-$finalPath = Join-Path $scriptDir $finalName
-if (Test-Path $finalPath) {
-    try {
-        Remove-Item $finalPath -Force -ErrorAction Stop
-    } catch {
-        Write-Error "ERROR: Target file '$finalName' is locked."
-        Write-Host "Please close the PDF file in your viewer (Acrobat, Browser, etc.) and re-run compilation." -ForegroundColor Yellow
-        exit 1
-    }
-}
-try {
-    Rename-Item -Path (Join-Path $scriptDir "main.pdf") -NewName $finalName -Force
-} catch {
-    Write-Error "ERROR: Failed to rename main.pdf to $finalName."
-    exit 1
-}
-
+$finalPath = Join-Path $scriptDir "Gesture-Controlled-Car-MiniProject.pdf"
 Write-Host "Final PDF: $finalPath" -ForegroundColor Green
