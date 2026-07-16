@@ -1,0 +1,63 @@
+// Transmitter
+#include <esp_now.h>
+#include <WiFi.h>
+#include <Wire.h>
+#include <MPU6050_tockn.h>
+
+MPU6050 mpu(Wire);
+
+typedef struct { char command; } PacketData;
+PacketData data;
+
+uint8_t receiverMAC[] = {0x20, 0xE7, 0xC8, 0x7C, 0xBE, 0xD4};
+
+char getCommand(float pitch, float roll) {
+  bool fwd = pitch > 20, back = pitch < -20;
+  bool left = roll < -20, right = roll > 20;
+
+  if (roll < -45) return 'A';               // rotate left
+  if (roll > 45)  return 'D';               // rotate right
+  if (fwd && left)  return 'Q';             // forward-left
+  if (fwd && right) return 'E';             // forward-right
+  if (back && left)  return 'Z';            // backward-left
+  if (back && right) return 'C';            // backward-right
+  if (fwd)  return 'F';                     // forward
+  if (back) return 'B';                     // backward
+  if (left)  return 'L';                    // strafe left
+  if (right) return 'R';                    // strafe right
+  return 'S';                               // stop
+}
+
+void setup() {
+  Serial.begin(115200);
+  WiFi.mode(WIFI_STA);
+  Wire.begin(21, 22);
+  mpu.begin();
+  delay(1000);
+  Serial.println("Keep MPU Flat");
+  mpu.calcGyroOffsets(true);
+
+  if (esp_now_init() != ESP_OK) {
+    Serial.println("ESP NOW INIT FAILED");
+    return;
+  }
+
+  esp_now_peer_info_t peerInfo = {};
+  memcpy(peerInfo.peer_addr, receiverMAC, 6);
+  peerInfo.channel = 0;
+  peerInfo.encrypt = false;
+  esp_now_add_peer(&peerInfo);
+
+  Serial.println("READY");
+}
+
+void loop() {
+  mpu.update();
+  data.command = getCommand(mpu.getAngleX(), mpu.getAngleY());
+
+  esp_now_send(receiverMAC, (uint8_t*)&data, sizeof(data));
+
+  Serial.print("CMD: ");
+  Serial.println(data.command);
+  delay(20);
+}

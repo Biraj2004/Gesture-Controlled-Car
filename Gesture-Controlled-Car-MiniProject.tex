@@ -97,8 +97,13 @@
 \vspace{0.8in}
 {\fontsize{14}{18}\selectfont By\par}
 \vspace{0.2in}
-{\fontsize{18}{22}\selectfont\bfseries Sohan Ghosh \\ (Roll No. 34900323050)\par}
-\vspace{0.8in}
+{\fontsize{13}{17}\selectfont\bfseries
+Sohan Ghosh (Roll No. 34900323050)\\
+Sarupya Guha (Roll No. 34900323046)\\
+Aushi Sarkar (Roll No. 34900323011)\\
+Bikkram Das (Roll No. 34900323012)\\
+Joydip Das (Roll No. 34900323020)\par}
+\vspace{0.5in}
 {\fontsize{14}{18}\selectfont Under the Guidance of\par}
 \vspace{0.2in}
 {\fontsize{16}{20}\selectfont Project Supervisor: Dr. Gautam Das\par}
@@ -126,9 +131,10 @@ I am also very thankful to the laboratory instructors who provided the necessary
 \hline
 \textbf{Roll No.} & \textbf{Name of the Member} & \textbf{Signature of the Member} \\ \hline
 34900323050 & Sohan Ghosh & \rule{0pt}{4ex} \\ \hline
-.................... & .................... & \rule{0pt}{4ex} \\ \hline
-.................... & .................... & \rule{0pt}{4ex} \\ \hline
-.................... & .................... & \rule{0pt}{4ex} \\ \hline
+34900323046 & Sarupya Guha & \rule{0pt}{4ex} \\ \hline
+34900323011 & Aushi Sarkar & \rule{0pt}{4ex} \\ \hline
+34900323012 & Bikkram Das & \rule{0pt}{4ex} \\ \hline
+34900323020 & Joydip Das & \rule{0pt}{4ex} \\ \hline
 \end{tabular}
 \end{center}
 \clearpage
@@ -451,97 +457,190 @@ The receiver ESP32 registers a callback function that triggers whenever a packet
 \section{Control Code Listings}
 The listings below detail the source codes for the transmitter and receiver ESP32-based ESP-NOW system.
 \begin{lstlisting}[language=C++, caption={ESP32 Transmitter Code (ESP-NOW with MPU6050 Pitch/Roll mapping)}]
+// Transmitter
 #include <esp_now.h>
 #include <WiFi.h>
 #include <Wire.h>
-#include <MPU6050.h>
+#include <MPU6050_tockn.h>
 
-MPU6050 mpu;
-uint8_t rxAddress[] = {0x24, 0x0A, 0xC4, 0x81, 0x2A, 0x3C}; // Receiver MAC Address
+MPU6050 mpu(Wire);
 
-struct PacketData {
-  uint8_t pitch;
-  uint8_t roll;
-  uint8_t yaw;
-} data;
+typedef struct { char command; } PacketData;
+PacketData data;
+
+uint8_t receiverMAC[] = {0x20, 0xE7, 0xC8, 0x7C, 0xBE, 0xD4};
+
+char getCommand(float pitch, float roll) {
+  bool fwd = pitch > 20, back = pitch < -20;
+  bool left = roll < -20, right = roll > 20;
+
+  if (roll < -45) return 'A';               // rotate left
+  if (roll > 45)  return 'D';               // rotate right
+  if (fwd && left)  return 'Q';             // forward-left
+  if (fwd && right) return 'E';             // forward-right
+  if (back && left)  return 'Z';            // backward-left
+  if (back && right) return 'C';            // backward-right
+  if (fwd)  return 'F';                     // forward
+  if (back) return 'B';                     // backward
+  if (left)  return 'L';                    // strafe left
+  if (right) return 'R';                    // strafe right
+  return 'S';                               // stop
+}
 
 void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
-  if (esp_now_init() != ESP_OK) { Serial.println("Error ESP-NOW"); return; }
+  Wire.begin(21, 22);
+  mpu.begin();
+  delay(1000);
+  Serial.println("Keep MPU Flat");
+  mpu.calcGyroOffsets(true);
+
+  if (esp_now_init() != ESP_OK) {
+    Serial.println("ESP NOW INIT FAILED");
+    return;
+  }
+
   esp_now_peer_info_t peerInfo = {};
-  memcpy(peerInfo.peer_addr, rxAddress, 6);
+  memcpy(peerInfo.peer_addr, receiverMAC, 6);
   peerInfo.channel = 0;
   peerInfo.encrypt = false;
-  if (esp_now_add_peer(&peerInfo) != ESP_OK) { Serial.println("Failed peer"); return; }
-  Wire.begin(21, 22); mpu.initialize();
+  esp_now_add_peer(&peerInfo);
+
+  Serial.println("READY");
 }
+
 void loop() {
-  int16_t ax, ay, az, gx, gy, gz; mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-  double pitch = atan2(-ax, sqrt((double)ay*ay + (double)az*az)) * 57.29577951;
-  double roll = atan2(ay, az) * 57.29577951;
-  
-  data.pitch = map(constrain((int)pitch, -90, 90), -90, 90, 0, 254);
-  data.roll = map(constrain((int)roll, -90, 90), -90, 90, 0, 254);
-  data.yaw = map(constrain(gz, -32768, 32767), -32768, 32767, 0, 254);
-  
-  esp_now_send(rxAddress, (uint8_t *) &data, sizeof(data));
-  delay(50);
+  mpu.update();
+  data.command = getCommand(mpu.getAngleX(), mpu.getAngleY());
+
+  esp_now_send(receiverMAC, (uint8_t*)&data, sizeof(data));
+
+  Serial.print("CMD: ");
+  Serial.println(data.command);
+  delay(20);
 }
 \end{lstlisting}
 \begin{lstlisting}[language=C++, caption={ESP32 Receiver Code (ESP-NOW Mecanum Control)}]
+// Listing 4.3 - ESP32 Receiver Code
 #include <esp_now.h>
 #include <WiFi.h>
+#include <vector>
 
-// Front Driver Pins
-const int ENA_F = 32; const int IN1_F = 33; const int IN2_F = 25;
-const int IN3_F = 26; const int IN4_F = 27; const int ENB_F = 14;
-// Back Driver Pins
-const int ENA_B = 22; const int IN1_B = 16; const int IN2_B = 17;
-const int IN3_B = 18; const int IN4_B = 19; const int ENB_B = 23;
+enum Movement {
+  STOP, FORWARD, BACKWARD, LEFT, RIGHT,
+  FORWARD_LEFT, FORWARD_RIGHT, BACKWARD_LEFT, BACKWARD_RIGHT,
+  TURN_LEFT, TURN_RIGHT
+};
 
-struct PacketData {
-  uint8_t pitch;
-  uint8_t roll;
-  uint8_t yaw;
-} data;
+enum MotorIndex { BR, BL, FR, FL };  // back-right, back-left, front-right, front-left
 
-void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
-  memcpy(&data, incomingData, sizeof(data));
-  int p = data.pitch; int r = data.roll;
-  
-  if (p < 100 && r > 100 && r < 150) { // Forward
-    driveMotors(HIGH, LOW, HIGH, LOW, HIGH, LOW, HIGH, LOW);
-  } else if (p > 150 && r > 100 && r < 150) { // Backward
-    driveMotors(LOW, HIGH, LOW, HIGH, LOW, HIGH, LOW, HIGH);
-  } else if (r < 100 && p > 100 && p < 150) { // Lateral Left
-    driveMotors(LOW, HIGH, HIGH, LOW, HIGH, LOW, LOW, HIGH);
-  } else if (r > 150 && p > 100 && p < 150) { // Lateral Right
-    driveMotors(HIGH, LOW, LOW, HIGH, LOW, HIGH, HIGH, LOW);
-  } else if (p < 100 && r < 100) { // Diagonal Forward-Left
-    driveMotors(LOW, LOW, HIGH, LOW, HIGH, LOW, LOW, LOW);
-  } else if (p < 100 && r > 150) { // Diagonal Forward-Right
-    driveMotors(HIGH, LOW, LOW, LOW, LOW, LOW, HIGH, LOW);
-  } else {
-    driveMotors(LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW);
+struct MOTOR_PINS { int pinIN1, pinIN2, pinEn; };
+
+std::vector<MOTOR_PINS> motorPins = {
+  {26, 18, 32},  // BACK RIGHT
+  {19, 23, 15},  // BACK LEFT
+  {13, 12, 33},  // FRONT RIGHT
+  {14, 27, 25}   // FRONT LEFT
+};
+
+const int PWMFreq = 1000;
+const int PWMResolution = 8;
+const int targetSpeed = 220;
+int currentSpeed = 0;
+
+#define SIGNAL_TIMEOUT 1000
+unsigned long lastRecvTime = 0;
+
+typedef struct { char command; } PacketData;
+PacketData receiverData;
+
+// Per-movement motor speed multipliers: {FR, BR, FL, BL} as fractions of spd (-1, 0, 1)
+const int movementTable[11][4] = {
+  /* STOP           */ {0, 0, 0, 0},
+  /* FORWARD        */ {1, 1, 1, 1},
+  /* BACKWARD       */ {-1, -1, -1, -1},
+  /* LEFT           */ {1, -1, -1, 1},
+  /* RIGHT          */ {-1, 1, 1, -1},
+  /* FORWARD_LEFT   */ {1, 0, 0, 1},
+  /* FORWARD_RIGHT  */ {0, 1, 1, 0},
+  /* BACKWARD_LEFT  */ {0, -1, -1, 0},
+  /* BACKWARD_RIGHT */ {-1, 0, 0, -1},
+  /* TURN_LEFT      */ {1, 1, -1, -1},
+  /* TURN_RIGHT     */ {-1, -1, 1, 1},
+};
+
+int smooth(int speed) {
+  if (currentSpeed < speed) currentSpeed = min(currentSpeed + 15, speed);
+  else if (currentSpeed > speed) currentSpeed = max(currentSpeed - 15, speed);
+  return currentSpeed;
+}
+
+void rotateMotor(int motorNumber, int motorSpeed) {
+  digitalWrite(motorPins[motorNumber].pinIN1, motorSpeed > 0 ? HIGH : LOW);
+  digitalWrite(motorPins[motorNumber].pinIN2, motorSpeed < 0 ? HIGH : LOW);
+  ledcWrite(motorPins[motorNumber].pinEn, abs(motorSpeed));
+}
+
+void processCarMovement(int movement) {
+  int spd = (movement == STOP) ? 0 : smooth(targetSpeed);
+  if (movement == STOP) currentSpeed = 0;
+
+  const int* m = movementTable[movement];
+  rotateMotor(FR, m[0] * spd);
+  rotateMotor(BR, m[1] * spd);
+  rotateMotor(FL, m[2] * spd);
+  rotateMotor(BL, m[3] * spd);
+}
+
+void onReceive(const esp_now_recv_info_t *info, const uint8_t *incomingData, int len) {
+  memcpy(&receiverData, incomingData, sizeof(receiverData));
+  lastRecvTime = millis();
+
+  Serial.print("CMD : ");
+  Serial.println(receiverData.command);
+
+  switch (receiverData.command) {
+    case 'F': processCarMovement(FORWARD); break;
+    case 'B': processCarMovement(BACKWARD); break;
+    case 'L': processCarMovement(LEFT); break;
+    case 'R': processCarMovement(RIGHT); break;
+    case 'Q': processCarMovement(FORWARD_LEFT); break;
+    case 'E': processCarMovement(FORWARD_RIGHT); break;
+    case 'Z': processCarMovement(BACKWARD_LEFT); break;
+    case 'C': processCarMovement(BACKWARD_RIGHT); break;
+    case 'A': processCarMovement(TURN_LEFT); break;
+    case 'D': processCarMovement(TURN_RIGHT); break;
+    default:  processCarMovement(STOP); break;
   }
 }
-void driveMotors(int f1, int f2, int f3, int f4, int b1, int b2, int b3, int b4) {
-  digitalWrite(IN1_F, f1); digitalWrite(IN2_F, f2);
-  digitalWrite(IN3_F, f3); digitalWrite(IN4_F, f4);
-  digitalWrite(IN1_B, b1); digitalWrite(IN2_B, b2);
-  digitalWrite(IN3_B, b3); digitalWrite(IN4_B, b4);
-  analogWrite(ENA_F, 200); analogWrite(ENB_F, 200);
-  analogWrite(ENA_B, 200); analogWrite(ENB_B, 200);
-}
+
 void setup() {
-  pinMode(IN1_F, OUTPUT); pinMode(IN2_F, OUTPUT); pinMode(IN3_F, OUTPUT); pinMode(IN4_F, OUTPUT);
-  pinMode(IN1_B, OUTPUT); pinMode(IN2_B, OUTPUT); pinMode(IN3_B, OUTPUT); pinMode(IN4_B, OUTPUT);
-  pinMode(ENA_F, OUTPUT); pinMode(ENB_F, OUTPUT); pinMode(ENA_B, OUTPUT); pinMode(ENB_B, OUTPUT);
-  WiFi.mode(WIFI_STA); esp_now_init();
-  esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
+  Serial.begin(115200);
+
+  for (size_t i = 0; i < motorPins.size(); i++) {
+    pinMode(motorPins[i].pinIN1, OUTPUT);
+    pinMode(motorPins[i].pinIN2, OUTPUT);
+    ledcAttach(motorPins[i].pinEn, PWMFreq, PWMResolution);
+  }
+
+  WiFi.mode(WIFI_STA);
+
+  if (esp_now_init() != ESP_OK) {
+    Serial.println("ESP NOW INIT FAILED");
+    return;
+  }
+
+  esp_now_register_recv_cb(esp_now_recv_cb_t(onReceive));
+  Serial.println("Receiver Ready");
 }
-void loop() {}
+
+void loop() {
+  if (millis() - lastRecvTime > SIGNAL_TIMEOUT) {
+    processCarMovement(STOP);
+  }
+  delay(10);
+}
 \end{lstlisting}
 \clearpage
 

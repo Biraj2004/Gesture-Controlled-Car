@@ -1,0 +1,119 @@
+// Listing 4.3 - ESP32 Receiver Code
+#include <esp_now.h>
+#include <WiFi.h>
+#include <vector>
+
+enum Movement {
+  STOP, FORWARD, BACKWARD, LEFT, RIGHT,
+  FORWARD_LEFT, FORWARD_RIGHT, BACKWARD_LEFT, BACKWARD_RIGHT,
+  TURN_LEFT, TURN_RIGHT
+};
+
+enum MotorIndex { BR, BL, FR, FL };  // back-right, back-left, front-right, front-left
+
+struct MOTOR_PINS { int pinIN1, pinIN2, pinEn; };
+
+std::vector<MOTOR_PINS> motorPins = {
+  {26, 18, 32},  // BACK RIGHT
+  {19, 23, 15},  // BACK LEFT
+  {13, 12, 33},  // FRONT RIGHT
+  {14, 27, 25}   // FRONT LEFT
+};
+
+const int PWMFreq = 1000;
+const int PWMResolution = 8;
+const int targetSpeed = 220;
+int currentSpeed = 0;
+
+#define SIGNAL_TIMEOUT 1000
+unsigned long lastRecvTime = 0;
+
+typedef struct { char command; } PacketData;
+PacketData receiverData;
+
+// Per-movement motor speed multipliers: {FR, BR, FL, BL} as fractions of spd (-1, 0, 1)
+const int movementTable[11][4] = {
+  /* STOP           */ {0, 0, 0, 0},
+  /* FORWARD        */ {1, 1, 1, 1},
+  /* BACKWARD       */ {-1, -1, -1, -1},
+  /* LEFT           */ {1, -1, -1, 1},
+  /* RIGHT          */ {-1, 1, 1, -1},
+  /* FORWARD_LEFT   */ {1, 0, 0, 1},
+  /* FORWARD_RIGHT  */ {0, 1, 1, 0},
+  /* BACKWARD_LEFT  */ {0, -1, -1, 0},
+  /* BACKWARD_RIGHT */ {-1, 0, 0, -1},
+  /* TURN_LEFT      */ {1, 1, -1, -1},
+  /* TURN_RIGHT     */ {-1, -1, 1, 1},
+};
+
+int smooth(int speed) {
+  if (currentSpeed < speed) currentSpeed = min(currentSpeed + 15, speed);
+  else if (currentSpeed > speed) currentSpeed = max(currentSpeed - 15, speed);
+  return currentSpeed;
+}
+
+void rotateMotor(int motorNumber, int motorSpeed) {
+  digitalWrite(motorPins[motorNumber].pinIN1, motorSpeed > 0 ? HIGH : LOW);
+  digitalWrite(motorPins[motorNumber].pinIN2, motorSpeed < 0 ? HIGH : LOW);
+  ledcWrite(motorPins[motorNumber].pinEn, abs(motorSpeed));
+}
+
+void processCarMovement(int movement) {
+  int spd = (movement == STOP) ? 0 : smooth(targetSpeed);
+  if (movement == STOP) currentSpeed = 0;
+
+  const int* m = movementTable[movement];
+  rotateMotor(FR, m[0] * spd);
+  rotateMotor(BR, m[1] * spd);
+  rotateMotor(FL, m[2] * spd);
+  rotateMotor(BL, m[3] * spd);
+}
+
+void onReceive(const esp_now_recv_info_t *info, const uint8_t *incomingData, int len) {
+  memcpy(&receiverData, incomingData, sizeof(receiverData));
+  lastRecvTime = millis();
+
+  Serial.print("CMD : ");
+  Serial.println(receiverData.command);
+
+  switch (receiverData.command) {
+    case 'F': processCarMovement(FORWARD); break;
+    case 'B': processCarMovement(BACKWARD); break;
+    case 'L': processCarMovement(LEFT); break;
+    case 'R': processCarMovement(RIGHT); break;
+    case 'Q': processCarMovement(FORWARD_LEFT); break;
+    case 'E': processCarMovement(FORWARD_RIGHT); break;
+    case 'Z': processCarMovement(BACKWARD_LEFT); break;
+    case 'C': processCarMovement(BACKWARD_RIGHT); break;
+    case 'A': processCarMovement(TURN_LEFT); break;
+    case 'D': processCarMovement(TURN_RIGHT); break;
+    default:  processCarMovement(STOP); break;
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+
+  for (size_t i = 0; i < motorPins.size(); i++) {
+    pinMode(motorPins[i].pinIN1, OUTPUT);
+    pinMode(motorPins[i].pinIN2, OUTPUT);
+    ledcAttach(motorPins[i].pinEn, PWMFreq, PWMResolution);
+  }
+
+  WiFi.mode(WIFI_STA);
+
+  if (esp_now_init() != ESP_OK) {
+    Serial.println("ESP NOW INIT FAILED");
+    return;
+  }
+
+  esp_now_register_recv_cb(onReceive);
+  Serial.println("Receiver Ready");
+}
+
+void loop() {
+  if (millis() - lastRecvTime > SIGNAL_TIMEOUT) {
+    processCarMovement(STOP);
+  }
+  delay(10);
+}
