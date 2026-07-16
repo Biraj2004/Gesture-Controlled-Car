@@ -1,0 +1,525 @@
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage[none]{hyphenat}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage[colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black]{hyperref}
+
+% Set line spacing to 1.3
+\setstretch{1.3}
+
+% Set paragraph styles: no paragraph indentation and no paragraph skip
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+% Style chapter and section headings: Centered and Bold for Topic Headings
+\titleformat{\chapter}[block]
+  {\normalfont\fontsize{18}{22}\selectfont\bfseries\centering}
+  {}{0pt}{}
+\titlespacing*{\chapter}{0pt}{10pt}{15pt}
+
+\titleformat{\section}
+  {\normalfont\fontsize{12}{15}\selectfont\bfseries\raggedright}
+  {}{0pt}{}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+
+% Style TOC Title to be Centered and Bold (22pt)
+\renewcommand{\contentsname}{Contents}
+\renewcommand{\cfttoctitlefont}{\normalfont\fontsize{22}{26}\selectfont\bfseries\centering}
+\renewcommand{\cftaftertoctitle}{\hfill}
+
+% Style TOC Chapter entries to be Bold and Italic
+\renewcommand{\cftchapfont}{\normalfont\bfseries\itshape}
+\renewcommand{\cftchappagefont}{\normalfont\bfseries\itshape}
+\setcounter{tocdepth}{0}
+
+\begin{document}
+
+% ==================== TITLE PAGE ====================
+\begin{titlepage}
+\centering
+\setstretch{1.3}
+\vspace*{0.8in}
+{\fontsize{26}{32}\selectfont\bfseries VIVA QUESTION BOOKLET\par}
+\vspace{0.4in}
+{\fontsize{18}{22}\selectfont\itshape Comprehensive VSA Study Guide\par}
+\vspace{0.8in}
+{\fontsize{16}{20}\selectfont For Mini Project:\par}
+\vspace{0.2in}
+{\fontsize{20}{26}\selectfont\bfseries GESTURE CONTROLLED WIRELESS 4WD ROBOTIC CAR\par}
+\vfill
+{\fontsize{14}{18}\selectfont Prepared By:\par}
+{\fontsize{16}{20}\selectfont\bfseries Biraj Sarkar \\ (Roll No. 34900323013)\par}
+\vspace{0.5in}
+{\fontsize{14}{18}\selectfont Under the Guidance of:\par}
+{\fontsize{16}{20}\selectfont\bfseries Dr. Gautam Das \\ (Project Supervisor)\par}
+\vfill
+{\fontsize{12}{16}\selectfont Department of Electronics and Communication Engineering \\ Cooch Behar Government Engineering College \\ 2026\par}
+\end{titlepage}
+
+\pagenumbering{roman}
+
+% ==================== TABLE OF CONTENTS ====================
+\newpage
+\begin{singlespace}
+\begingroup
+\titleformat{\chapter}[block]
+  {\normalfont\fontsize{22}{26}\selectfont\bfseries\centering}
+  {}{0pt}{}
+\tableofcontents
+\endgroup
+\end{singlespace}
+\clearpage
+
+\pagenumbering{arabic}
+
+% ==================== TOPIC 0: BASIC PREREQUISITE UNDERSTANDING & KNOWLEDGE ====================
+\chapter{Topic 0: Basic Prerequisite Understanding \& Knowledge}
+
+\section{Q1. What is an embedded system?}
+\textbf{Answer:} An embedded system is a dedicated computer system designed to perform specific control functions within a larger mechanical or electrical system.
+
+\section{Q2. What does ESP stand for in ESP32?}
+\textbf{Answer:} "ESP" stands for Espressif Systems, the semiconductor company that designed and manufactured the chip.
+
+\section{Q3. What do the terms VCC and GND mean on a microcontroller board?}
+\textbf{Answer:} VCC represents the positive power supply voltage pin, while GND represents the ground or common reference point (0V).
+
+\section{Q4. What does IMU stand for, and what is its main function?}
+\textbf{Answer:} IMU stands for Inertial Measurement Unit; it is an electronic device that measures a body's specific force, angular rate, and orientation.
+
+\section{Q5. What does the term "6-axis" mean in the MPU6050?}
+\textbf{Answer:} It means the sensor has a 3-axis accelerometer and a 3-axis gyroscope combined on a single chip to track 6 degrees of motion.
+
+\section{Q6. What is the full form of I2C and who developed it?}
+\textbf{Answer:} I2C stands for Inter-Integrated Circuit, which is a serial communication bus developed by Philips Semiconductors (now NXP).
+
+\section{Q7. What does the "NOW" signify in the ESP-NOW protocol name?}
+\textbf{Answer:} It signifies instantaneous (immediate) data transmission without connection or handshaking delays.
+
+\section{Q8. What is the full form of MAC address?}
+\textbf{Answer:} MAC stands for Media Access Control, representing the physical hardware address of a device.
+
+\section{Q9. What radio frequency range does ESP-NOW operate on?}
+\textbf{Answer:} It operates on the standard 2.4 GHz Industrial, Scientific, and Medical (ISM) radio band.
+
+\section{Q10. What does "DC" stand for in DC motor, and how does it turn?}
+\textbf{Answer:} "DC" stands for Direct Current; the motor converts electrical energy from a direct current source into rotational mechanical energy.
+
+\section{Q11. What does the "N" represent in the L298N motor driver part number?}
+\textbf{Answer:} The "N" suffix typically indicates the Multiwatt-15 vertical package style of the L298 integrated circuit.
+
+\section{Q12. What is a short circuit, and why is it dangerous?}
+\textbf{Answer:} A low-resistance connection between supply and ground that causes excessive current draw, leading to battery overheating or component damage.
+
+\section{Q13. Who invented the Mecanum wheel, and when?}
+\textbf{Answer:} It was invented by Bengt Ilon, a Swedish engineer, in 1972 while working for the company Mecanum AB.
+
+\section{Q14. What are the rollers on a Mecanum wheel made of?}
+\textbf{Answer:} The passive rollers are typically made of high-traction rubber or plastic materials to ensure firm friction on the ground surface.
+
+\section{Q15. What does "kinematics" mean in robotics?}
+\textbf{Answer:} Kinematics is the study of motion (position, velocity, acceleration) of mechanical systems without considering the forces that cause the motion.
+
+\section{Q16. What is the purpose of calibration in sensors?}
+\textbf{Answer:} Calibration eliminates static offsets and errors by comparing the sensor output against a known reference standard (e.g. flat gravity reference).
+
+\section{Q17. What is an ultrasonic sensor, and how does it measure distance?}
+\textbf{Answer:} It emits high-frequency sound waves and measures the time taken for the echo to bounce back from an object to calculate distance.
+
+\section{Q18. What does "noise" mean in electrical signals?}
+\textbf{Answer:} Noise refers to unwanted random electrical disturbances that degrade or distort the actual signal values.
+
+\section{Q19. State Ohm's Law and its mathematical expression.}
+\textbf{Answer:} Ohm's Law states that current ($I$) through a conductor is directly proportional to voltage ($V$) across it, represented by the equation $V = I \times R$.
+
+\section{Q20. State Kirchhoff's Voltage and Current Laws (KVL/KCL).}
+\textbf{Answer:} KVL states that the sum of voltages around a closed loop is zero; KCL states that the total current entering a junction equals the current leaving it.
+
+% ==================== TOPIC 1: EMBEDDED SYSTEMS & ESP32 ARCHITECTURE ====================
+\chapter{Topic 1: Embedded Systems \& ESP32 Architecture}
+
+\section{Q21. What is the clock speed of the ESP32 and how does it compare to Arduino Uno?}
+\textbf{Answer:} The ESP32 operates at a high clock speed of 240 MHz (dual-core), whereas the Arduino Uno operates at a single-core speed of 16 MHz.
+
+\section{Q22. What is the operating voltage of the ESP32 and is it 5V tolerant?}
+\textbf{Answer:} The ESP32 operates at 3.3V, and its GPIO pins are not 5V tolerant; supplying 5V can permanently damage the chip.
+
+\section{Q23. What is the difference between Core 0 and Core 1 in the ESP32?}
+\textbf{Answer:} Core 0 is primarily designated for running Wi-Fi, Bluetooth, and network protocols, while Core 1 handles user application code.
+
+\section{Q24. What is the difference between SRAM and Flash memory in the ESP32?}
+\textbf{Answer:} SRAM (520 KB) is volatile memory used for temporary data runtime, while Flash memory (4 MB) is non-volatile memory storing the firmware code.
+
+\section{Q25. How do you configure a GPIO pin to send signals to the motor driver in code?}
+\textbf{Answer:} You use the `pinMode(pin, OUTPUT)` function in the `setup()` block to configure the designated pin as a digital output.
+
+\section{Q26. What is PWM and why is it used in motor control?}
+\textbf{Answer:} Pulse Width Modulation (PWM) varies the duty cycle of a square wave to adjust the average voltage delivered, thereby controlling motor speed.
+
+\section{Q27. What is the purpose of the Boot button and EN button on the ESP32 development board?}
+\textbf{Answer:} The Boot button pulls GPIO 0 low to place the ESP32 in serial bootloader mode, while the EN (Enable) button resets the chip by pulling the chip enable line low.
+
+\section{Q28. Why does the ESP32 need an onboard USB-to-UART bridge chip (like CP2102 or CH340)?}
+\textbf{Answer:} It translates USB communication from the PC into TTL serial signals (TX/RX) so the ESP32 bootloader can receive code and transmit Serial data.
+
+\section{Q29. What is the ADC resolution of the ESP32 and how does it compare to Arduino Uno?}
+\textbf{Answer:} The ESP32 features a 12-bit ADC (values 0--4095), whereas the Arduino Uno has a 10-bit ADC (values 0--1023), providing 4 times higher resolution.
+
+\section{Q30. What is the function of the LDO voltage regulator on the ESP32 development board?}
+\textbf{Answer:} The LDO (Low-Dropout) regulator steps down the external 5V input from the USB port to a stable 3.3V required to power the ESP32 chip.
+
+\section{Q31. What is FreeRTOS and does the ESP32 run it by default?}
+\textbf{Answer:} FreeRTOS is a real-time operating system that runs by default on the ESP32, allowing multitasking and task scheduling across its dual cores.
+
+\section{Q32. What is a watchdog timer (WDT) in microcontrollers?}
+\textbf{Answer:} A hardware timer that automatically resets the microcontroller if the software gets stuck in an infinite loop or freezes.
+
+\section{Q33. How does the ESP32 store Wi-Fi credentials or calibration values when powered off?}
+\textbf{Answer:} It uses Non-Volatile Storage (NVS) library to save key-value pairs directly in a dedicated partition of its Flash memory.
+
+\section{Q34. What is the difference between hardware interrupts and software polling?}
+\textbf{Answer:} Polling repeatedly queries a pin state in a loop, while interrupts halt the main execution instantly when a hardware pin changes state.
+
+\section{Q35. What is the difference between GPIO pins that have ADC capabilities and those that do not?}
+\textbf{Answer:} ADC pins read continuous analog voltages and convert them to digital numbers, whereas standard GPIOs only detect discrete high/low logic states.
+
+\section{Q36. What is capacitive touch sensing on the ESP32?}
+\textbf{Answer:} The ESP32 integrates internal sensors that detect changes in capacitance caused by finger touch on designated GPIO pins.
+
+\section{Q37. What is DAC on the ESP32 and what is its resolution?}
+\textbf{Answer:} Digital-to-Analog Converter (DAC) outputs analog voltages; the ESP32 has two independent 8-bit DAC channels (GPIO 25 and 26).
+
+\section{Q38. What does the term "SoC" stand for and is the ESP32 one?}
+\textbf{Answer:} SoC stands for System on Chip; the ESP32 is a SoC because it integrates the CPU, memory, and wireless transceiver onto a single silicon die.
+
+\section{Q39. What is the standard voltage level for logical HIGH on the ESP32?}
+\textbf{Answer:} A logical HIGH on the ESP32 is represented by a voltage level of approximately 3.3V (in contrast to 5V on standard Arduino boards).
+
+\section{Q40. What is the purpose of the EN pin capacitor in the ESP32 auto-program circuit?}
+\textbf{Answer:} It delays the EN line ramp-up during serial bootloading to give the USB-to-UART bridge enough time to assert the GPIO 0 boot signal.
+
+% ==================== TOPIC 2: WEARABLE GLOVE & IMU SENSOR (MPU6050) ====================
+\chapter{Topic 2: Wearable Glove \& IMU Sensor (MPU6050)}
+
+\section{Q41. What physical quantities do the accelerometer and gyroscope in the MPU6050 measure?}
+\textbf{Answer:} The accelerometer measures linear acceleration along the X, Y, Z axes, while the gyroscope measures angular velocity (rate of rotation) around these axes.
+
+\section{Q42. What communication protocol is used between the ESP32 and the MPU6050?}
+\textbf{Answer:} The I2C (Inter-Integrated Circuit) synchronous serial protocol is used, requiring only two wires: SDA (data) and SCL (clock).
+
+\section{Q43. What are the default SDA and SCL pins on the ESP32?}
+\textbf{Answer:} The default I2C pins on the ESP32 are GPIO 21 for SDA and GPIO 22 for SCL.
+
+\section{Q44. Why is the magnetometer missing in MPU6050, and what is its consequence?}
+\textbf{Answer:} The MPU6050 is a 6-axis sensor lacking a magnetometer, which prevents it from referencing the Earth's magnetic north to calculate absolute Yaw.
+
+\section{Q45. What is the mathematical function used to calculate Pitch and Roll from gravity vectors?}
+\textbf{Answer:} The trigonometric function `atan2()` is used to compute the angles of Pitch and Roll from the raw acceleration components.
+
+\section{Q46. What is the purpose of the MPU6050's Digital Motion Processor (DMP)?}
+\textbf{Answer:} The onboard DMP parses raw sensor data and computes complex orientation outputs, offloading sensor fusion calculations from the ESP32.
+
+\section{Q47. What is the full-scale range of the MPU6050 accelerometer and gyroscope, and how is it configured?}
+\textbf{Answer:} The accelerometer can be set to $\pm2g, \pm4g, \pm8g, \pm16g$, and the gyroscope to $\pm250, \pm500, \pm1000, \pm2000^{\circ}/s$ by writing to the config registers.
+
+\section{Q48. What is sensor drift in gyroscopes, and how does it affect position tracking over time?}
+\textbf{Answer:} Gyroscope drift is the accumulation of small bias errors over time during integration, causing calculated angles to steadily wander from actual values.
+
+\section{Q49. What are I2C pull-up resistors and why are they required?}
+\textbf{Answer:} I2C lines are open-drain; pull-up resistors (typically 4.7k$\Omega$) pull the signal lines high to VCC when no device is pulling them low.
+
+\section{Q50. What are the I2C speed modes supported by the MPU6050?}
+\textbf{Answer:} It supports Standard Mode (100 kbps) and Fast Mode (400 kbps) to enable rapid data transfer.
+
+\section{Q51. What is the AD0 pin on the MPU6050, and how does it affect the device address?}
+\textbf{Answer:} The AD0 pin sets the LSB of the I2C address; connecting it to GND sets the address to `0x68`, and connecting to VCC sets it to `0x69`.
+
+\section{Q52. What is the difference between raw sensor output and calibrated physical units in MPU6050?}
+\textbf{Answer:} Raw outputs are 16-bit signed integers; they must be divided by sensitivity scale factors (e.g., 16384 LSB/g) to obtain values in $g$ or $^{\circ}/s$.
+
+\section{Q53. How does mechanical vibration affect accelerometer readings?}
+\textbf{Answer:} High-frequency vibrations introduce high-frequency noise spikes, which distort tilt calculations unless filtered out by software or low-pass filters.
+
+\section{Q54. What is the function of the built-in temperature sensor in the MPU6050?}
+\textbf{Answer:} It measures die temperature to allow software compensation for thermal bias drift in the accelerometer and gyroscope silicon.
+
+\section{Q55. What is the significance of the "FIFO" buffer in the MPU6050?}
+\textbf{Answer:} First-In-First-Out (FIFO) buffer stores sensor data packets temporarily so the ESP32 can read them in bursts, preventing data loss.
+
+\section{Q56. What is the auxiliary I2C bus on the MPU6050 used for?}
+\textbf{Answer:} It allows the MPU6050 to directly interface with external sensors (like a magnetometer) without passing data through the main ESP32 I2C bus.
+
+\section{Q57. What is quantization error in sensor ADCs?}
+\textbf{Answer:} The difference between the continuous physical analog value and its discrete digital representation due to finite resolution limits.
+
+\section{Q58. How does the MPU6050 notify the ESP32 that new data is ready to be read?}
+\textbf{Answer:} It asserts a digital signal on its INT (Interrupt) pin, triggering a hardware interrupt routine on the ESP32.
+
+\section{Q59. What is the default I2C clock frequency used in your ESP32-MPU6050 communication?}
+\textbf{Answer:} The communication typically runs at 400 kHz (Fast Mode) for rapid, real-time sensor updates.
+
+\section{Q60. What does "degrees of freedom" (DoF) mean, and how many does the MPU6050 have?}
+\textbf{Answer:} DoF represents the independent directions of motion tracked; the MPU6050 has 6-DoF (3 translation axes + 3 rotation axes).
+
+% ==================== TOPIC 3: ESP-NOW WIRELESS PROTOCOL ====================
+\chapter{Topic 3: ESP-NOW Wireless Protocol}
+
+\section{Q61. What is ESP-NOW and what frequency band does it operate on?}
+\textbf{Answer:} ESP-NOW is a low-latency, connectionless peer-to-peer wireless protocol developed by Espressif Systems operating on the 2.4 GHz RF band.
+
+\section{Q62. Why is ESP-NOW faster than standard Wi-Fi?}
+\textbf{Answer:} Unlike standard Wi-Fi, ESP-NOW does not require a router connection or IP handshakes, enabling instantaneous packet transmission.
+
+\section{Q63. What is the maximum payload size of a single ESP-NOW packet?}
+\textbf{Answer:} A single ESP-NOW packet can transmit a maximum data payload of 250 bytes.
+
+\section{Q64. Why is a MAC address required in ESP-NOW?}
+\textbf{Answer:} In a connectionless network, the transmitter must target the receiver's physical hardware MAC address to route the data packet directly.
+
+\section{Q65. How do you register a function to handle incoming ESP-NOW packets on the receiver?}
+\textbf{Answer:} You use the API function `esp\_now\_register\_recv\_cb()` to register a custom callback function that triggers upon packet arrival.
+
+\section{Q66. What is the transmission range and typical latency of ESP-NOW?}
+\textbf{Answer:} It offers a line-of-sight transmission range of up to 100 meters with an ultra-low latency of only 5 to 10 milliseconds.
+
+\section{Q67. Can ESP-NOW communicate between more than two boards simultaneously?}
+\textbf{Answer:} Yes, ESP-NOW supports one-to-many and many-to-many topologies, allowing a single transmitter to control multiple receiver cars.
+
+\section{Q68. How does ESP-NOW handle encryption and secure data transmission?}
+\textbf{Answer:} ESP-NOW supports PMK (Primary Master Key) and LMK (Local Master Key) keys to encrypt packets, though encryption is disabled for lowest latency.
+
+\section{Q69. What happens if the receiver ESP32 is powered off when a packet is sent?}
+\textbf{Answer:} The transmitter's send callback function returns a failure status (`ESP\_NOW\_SEND\_FAIL`) because no ACK frame is received.
+
+\section{Q70. Does ESP-NOW require a Wi-Fi network SSID and password to function?}
+\textbf{Answer:} No, ESP-NOW uses raw 802.11 vendor-specific action frames, bypasses the Wi-Fi connection phase entirely, and requires no credentials.
+
+\section{Q71. Can ESP-NOW operate while the ESP32 is also connected to a normal Wi-Fi router?}
+\textbf{Answer:} Yes, ESP32 supports co-existence modes, but both connections must operate on the same Wi-Fi channel (typically channel 1 to 11).
+
+\section{Q72. How does the receiver distinguish packets sent by your transmitter from another glove in the same room?}
+\textbf{Answer:} The receiver checks the sender MAC address parameter in the callback function to verify it matches the authorized transmitter.
+
+\section{Q73. What is the maximum number of paired peers supported by ESP-NOW?}
+\textbf{Answer:} ESP-NOW supports up to 20 paired peers, which can be encrypted or unencrypted, depending on the network configuration.
+
+\section{Q74. How does the channel setting affect ESP-NOW transmission stability?}
+\textbf{Answer:} Selecting a less congested Wi-Fi channel (e.g., channel 6 or 11) reduces RF packet collisions and improves transmission reliability.
+
+\section{Q75. Does ESP-NOW require internet access to transmit commands?}
+\textbf{Answer:} No, ESP-NOW is a local, peer-to-peer radio protocol that operates offline without any internet connection.
+
+\section{Q76. How does the ESP-NOW protocol handle channel interference?}
+\textbf{Answer:} It allows manual selection of the 802.11 channel (1 to 14) to avoid bands heavily congested by local Wi-Fi networks.
+
+\section{Q77. What is the broadcast address in ESP-NOW, and what is it used for?}
+\textbf{Answer:} The broadcast MAC address is `FF:FF:FF:FF:FF:FF`, used to send packets to all listening ESP-NOW devices simultaneously.
+
+\section{Q78. What is the typical packet transmission success rate of ESP-NOW within 10 meters?}
+\textbf{Answer:} The transmission success rate is typically greater than 99\% in clean RF environments due to hardware-level ACK frames.
+
+\section{Q79. What is the power consumption of ESP-NOW compared to standard Wi-Fi?}
+\textbf{Answer:} ESP-NOW consumes significantly less power because it eliminates the overhead of managing TCP/IP handshake and connection maintenance.
+
+\section{Q80. How does the ESP32 transmitter know if the receiver has moved out of range?}
+\textbf{Answer:} The registered send callback function returns a send status of `ESP\_NOW\_SEND\_FAIL` when the receiver fails to reply with an ACK.
+
+% ==================== TOPIC 4: H-BRIDGE DRIVERS & POWER SCHEMES ====================
+\chapter{Topic 4: H-Bridge Drivers \& Power Schemes}
+
+\section{Q81. What is an H-Bridge and what is its primary function?}
+\textbf{Answer:} An H-Bridge is an electronic circuit of four switches that reverses the polarity of voltage across a motor to control its direction.
+
+\section{Q82. What is the operating voltage range and maximum current limit of the L298N driver?}
+\textbf{Answer:} The L298N can drive motor voltages up to 46V and deliver a peak output current of 2A per channel.
+
+\section{Q83. Why do we need a split power supply for the motors and the microcontrollers?}
+\textbf{Answer:} It prevents high-current motor load spikes and inductive noise from causing voltage drops that reset the microcontroller.
+
+\section{Q84. What is the function of the onboard 5V regulator on the L298N driver board?}
+\textbf{Answer:} The regulator (LM7805) steps down the battery voltage (e.g. 7.4V) to a stable 5V output to power the microcontroller.
+
+\section{Q85. What is the consequence of failing to connect the ground of the battery, ESP32, and motor driver?}
+\textbf{Answer:} The control signals sent from the ESP32 will lack a common reference return path, causing erratic motor behaviors or total control failure.
+
+\section{Q86. Why are flyback diodes used in H-Bridge motor driver circuits?}
+\textbf{Answer:} They provide a safe path for high-voltage inductive kickback spikes (back-EMF) generated by motor coils to protect driver transistors.
+
+\section{Q87. What is the difference between a linear regulator (like the LM7805 on the L298N) and a buck converter?}
+\textbf{Answer:} A linear regulator steps down voltage by dissipating excess energy as heat, while a buck converter uses switching transistors and an inductor for high efficiency.
+
+\section{Q88. What is the purpose of the 5V jumper on the L298N motor driver?}
+\textbf{Answer:} Placing the jumper enables the onboard 5V regulator to power internal logic from the motor power input; it must be removed if input exceeds 12V.
+
+\section{Q89. What is a Bootstrap circuit in high-side MOSFET drivers?}
+\textbf{Answer:} It uses a capacitor to generate a gate drive voltage higher than the supply rail, allowing N-channel MOSFETs to switch on the high side.
+
+\section{Q90. Why does the L298N require a heatsink while driving BO motors?}
+\textbf{Answer:} High internal BJT saturation voltage drops generate substantial heat, which must be dissipated by a heatsink to prevent thermal shutdown.
+
+\section{Q91. What is the difference between motor "coasting" and "braking" in H-Bridge logic?}
+\textbf{Answer:} Coasting disables all switches allowing the motor to spin to a stop slowly, while braking shorts the motor terminals to lock it instantly.
+
+\section{Q92. What is a BMS (Battery Management System) and why is it used in Li-Ion packs?}
+\textbf{Answer:} A protection circuit that prevents over-charging, over-discharging, and short circuits in Lithium cells to prevent thermal runaway.
+
+\section{Q93. What is the purpose of decoupling capacitors near the power pins of the ESP32?}
+\textbf{Answer:} They act as local charge reservoirs to supply current during transient spikes, preventing local voltage sag and system crashes.
+
+\section{Q94. What is back-EMF and how does it affect the motor driver?}
+\textbf{Answer:} Back-Electromotive Force is voltage generated by the spinning motor acting as a generator; it opposes the supply and can damage drivers if unsuppressed.
+
+\section{Q95. What is the difference between N-channel and P-channel MOSFETs in motor control?}
+\textbf{Answer:} N-channel MOSFETs are typically used on the low side because of lower resistance ($R_{DS(on)}$), while P-channel MOSFETs are used on the high side.
+
+\section{Q96. What is cross-conduction (shoot-through) in an H-bridge, and why is it catastrophic?}
+\textbf{Answer:} When both high-side and low-side switches on the same side turn on simultaneously, shorting VCC to ground and destroying the transistors.
+
+\section{Q97. Why are 0.1\textmu{}F capacitors soldered directly across motor terminals?}
+\textbf{Answer:} To suppress high-frequency electromagnetic interference (EMI) and sparking caused by the rotating motor brushes.
+
+\section{Q98. What is the maximum voltage drop across L298N BJTs under a 1A load?}
+\textbf{Answer:} The voltage drop is typically around 1.8V to 2.0V, resulting in significant power loss and heat dissipation.
+
+\section{Q99. What is a flyback diode's reverse recovery time and why does it matter?}
+\textbf{Answer:} The time it takes a diode to turn off when voltage is reversed; fast recovery is crucial in high-frequency PWM switching to prevent shorting.
+
+\section{Q100. What is the purpose of the current sensing pins on the L298N chip?}
+\textbf{Answer:} They allow connecting external resistors to measure motor current by monitoring voltage drops, useful for detecting motor stalls.
+
+% ==================== TOPIC 5: MECANUM WHEELS & KINEMATICS ====================
+\chapter{Topic 5: Mecanum Wheels \& Kinematics}
+
+\section{Q101. What is a Mecanum wheel and how does it differ from a standard wheel?}
+\textbf{Answer:} A Mecanum wheel has passive rollers mounted at a 45-degree angle around its rim, allowing it to generate lateral thrust vectors.
+
+\section{Q102. How does a Mecanum-wheeled robot perform lateral left sliding movement?}
+\textbf{Answer:} The front-left and back-right wheels rotate in reverse, while the front-right and back-left wheels rotate forward.
+
+\section{Q103. How does the robot slide directly sideways to the right?}
+\textbf{Answer:} The front-left and back-right wheels rotate forward, while the front-right and back-left wheels rotate in reverse.
+
+\section{Q104. What is a holonomic drive system?}
+\textbf{Answer:} A system that can move in any direction (x, y translation and yaw rotation) simultaneously and independently of its orientation.
+
+\section{Q105. How does the transmitter map the tilt angles to fit inside a single byte?}
+\textbf{Answer:} It constrains the pitch/roll angles to [-90, 90] and maps them to a [0, 254] range using the Arduino `map()` function.
+
+\section{Q106. Why is the center value of the mapped scale 127?}
+\textbf{Answer:} The value 127 represents the neutral flat position (midpoint of 0 to 254), which indicates a stationary state.
+
+\section{Q107. Why does a Mecanum wheel robot experience lateral slippage, and how can it be minimized?}
+\textbf{Answer:} The passive angled rollers slide easily on slick floors; slippage is reduced by using high-grip rubber rollers and software acceleration ramping.
+
+\section{Q108. What happens to the direction of force vectors if you mount a Mecanum wheel backwards?}
+\textbf{Answer:} The 45-degree angled rollers will oppose the proper force direction, causing lateral steering inputs to move the robot diagonally or rotate it.
+
+\section{Q109. What is the difference between Mecanum wheels and standard Omni wheels?}
+\textbf{Answer:} Mecanum wheels have rollers mounted at a 45-degree angle to the wheel axis, whereas Omni wheel rollers are mounted at 90 degrees.
+
+\section{Q110. What wheel configuration (pattern) must be used on the chassis for Mecanum steering?}
+\textbf{Answer:} The wheels must form an "X" shape when viewed from above, meaning the roller axes point toward the center of the robot.
+
+\section{Q111. How does the robot rotate on its axis (yaw rotation) using Mecanum wheels?}
+\textbf{Answer:} The left side wheels rotate in reverse, while the right side wheels rotate forward (or vice versa).
+
+\section{Q112. What are the diagonal force vectors generated during sideways movement?}
+\textbf{Answer:} Opposite wheels generate forward-diagonal and backward-diagonal vectors, which cancel out longitudinal forces and add up laterally.
+
+\section{Q113. How does speed mapping affect Mecanum motor control?}
+\textbf{Answer:} The PWM values must be balanced across all four motors to ensure that mismatched motor strengths do not cause the robot to drift off-course.
+
+\section{Q114. What is holonomic vs non-holonomic movement in mobile robotics?}
+\textbf{Answer:} Holonomic robots can translate in any direction instantly (like Mecanum), whereas non-holonomic robots must steer and drive (like a standard car).
+
+\section{Q115. How does the angle of Mecanum rollers affect the direction of movement?}
+\textbf{Answer:} The 45-degree angle resolves the rotation vector into equal longitudinal and lateral forces, allowing smooth sideways translation.
+
+\section{Q116. What is the difference between diagonal forward-left and diagonal forward-right steering vectors?}
+\textbf{Answer:} Diagonal forward-left drives only the front-right and back-left wheels, while diagonal forward-right drives only front-left and back-right.
+
+\section{Q117. What is a "skid-steer" system, and how does it compare to Mecanum?}
+\textbf{Answer:} Skid-steer turns by running one side faster than the other, causing tyre slip, whereas Mecanum translates sideways without wheel slipping.
+
+\section{Q118. Why is chassis weight distribution critical for Mecanum-wheeled robots?}
+\textbf{Answer:} Uneven weight distribution causes some rollers to slip more than others, distorting the intended lateral movement vector.
+
+\section{Q119. How does the robot brake to a stop using Mecanum forces?}
+\textbf{Answer:} By executing active reverse torque (briefly reversing all motors) to quickly cancel out forward kinetic momentum.
+
+\section{Q120. Can a Mecanum wheel robot drive on loose sand or gravel?}
+\textbf{Answer:} No, loose materials jam the passive rollers and prevent the lateral vector cancellation required for sideways translation.
+
+% ==================== TOPIC 6: TROUBLESHOOTING & ENHANCEMENTS ====================
+\chapter{Topic 6: Troubleshooting \& Enhancements}
+
+\section{Q121. Why do we define a software "dead zone" (e.g. 100 to 150) in sensor readings?}
+\textbf{Answer:} The dead zone prevents minor hand shaking or sensor noise from triggering accidental motor movements when the hand is neutral.
+
+\section{Q122. What is the major limitation of the L298N driver and how does it affect battery life?}
+\textbf{Answer:} The L298N has a high internal voltage drop (1.5V to 2V) across its BJTs, wasting battery energy as heat and lowering motor power.
+
+\section{Q123. What modern component would you use to replace the L298N driver?}
+\textbf{Answer:} A MOSFET-based motor driver like the TB6612FNG, which offers extremely low resistance and high power efficiency.
+
+\section{Q124. What is a complementary filter, and why is it used for IMU data?}
+\textbf{Answer:} It combines high-pass filtered gyroscope data and low-pass filtered accelerometer data to obtain a stable, drift-free orientation estimate.
+
+\section{Q125. How does a Kalman filter improve on a complementary filter?}
+\textbf{Answer:} It uses a recursive statistical algorithm to estimate the true state by weighting sensor measurements and system noise dynamically.
+
+\section{Q126. How would you add obstacle avoidance capabilities to this car?}
+\textbf{Answer:} Mount an ultrasonic or ToF distance sensor on the front and write code to override control inputs if an object is detected within 20 cm.
+
+\section{Q127. What is the difference between a Complementary Filter and a Kalman Filter in processing overhead?}
+\textbf{Answer:} A Complementary Filter runs simple scalar equations, while a Kalman Filter requires heavy matrix operations, increasing ESP32 CPU load.
+
+\section{Q128. How does the battery C-rating affect the performance of your robotic car under load?}
+\textbf{Answer:} The C-rating determines the maximum current discharge rate; a low C-rating causes voltage brownouts when all four DC motors start under load.
+
+\section{Q129. What is gyroscope integration drift, and how do we calibrate it out in software?}
+\textbf{Answer:} Accumulating static offset biases causes drift; we calibrate it by measuring the average output while stationary and subtracting it as an offset.
+
+\section{Q130. What is the role of the Kalman filter covariance matrix?}
+\textbf{Answer:} It represents the uncertainty of the system state and measurement noise, allowing the filter to dynamically weight predictions.
+
+\section{Q131. How does a buck-boost converter differ from a buck converter?}
+\textbf{Answer:} A buck converter only steps down voltage, while a buck-boost converter can either step up or step down voltage as needed.
+
+\section{Q132. What is a logic level shifter and when is it required?}
+\textbf{Answer:} A circuit that shifts digital signals from 3.3V to 5V (or vice versa) to allow safe communication between mismatched voltage devices.
+
+\section{Q133. How does temperature affect the calibration of your MPU6050 sensor?}
+\textbf{Answer:} Temperature changes cause thermal expansion in the MEMS structures, shifting the accelerometer and gyroscope offsets dynamically.
+
+\section{Q134. What is the benefit of adding an optical encoder to each Mecanum wheel?}
+\textbf{Answer:} It provides real-time wheel speed feedback, enabling closed-loop PID control to maintain precise steering vectors despite wheel slippage.
+
+\section{Q135. What is the sampling rate of the MPU6050, and how does it affect signal filtering?}
+\textbf{Answer:} It can sample up to 8 kHz; higher sampling rates allow digital low-pass filters to remove high-frequency physical noises more effectively.
+
+\section{Q136. How do you implement a digital low-pass filter (DLPF) in the MPU6050 registers?}
+\textbf{Answer:} By configuring the `DLPF\_CFG` bits in the `CONFIG` register to set a cutoff frequency (e.g. 42 Hz) to filter out engine rumble.
+
+\section{Q137. What is the purpose of a PID controller in motor speed regulation?}
+\textbf{Answer:} It continuously calculates an error value and applies Proportional, Integral, and Derivative corrections to maintain target RPM under load.
+
+\section{Q138. What is the main advantage of a Time-of-Flight (ToF) distance sensor over an ultrasonic sensor?}
+\textbf{Answer:} ToF sensors use laser light to measure distance directly, which is faster and unaffected by sound reflections or target material textures.
+
+\section{Q139. Why does sensor fusion improve tilt estimation compared to using only an accelerometer?}
+\textbf{Answer:} It combines the accelerometer's static accuracy with the gyroscope's rapid response to reject dynamic centrifugal acceleration errors.
+
+\section{Q140. What is thermal runaway in Lithium-Ion battery packs?}
+\textbf{Answer:} An uncontrolled temperature rise caused by internal shorts or overcharging that triggers exothermic reactions, leading to fire or explosion.
+
+\end{document}
