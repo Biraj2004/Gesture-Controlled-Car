@@ -647,7 +647,7 @@ void loop() {
 % ==================== PAGE 18: CHAPTER 5: RESULTS & CONCLUSIONS ====================
 \chapter{Experimental Results, Conclusions and Future Scope}
 \section{System Calibration and Testing}
-The accelerometer and gyroscope sensors were calibrated to establish threshold limits. We recorded orientation outputs for neutral, tilt forward, tilt backward, tilt left, and tilt right positions. Calibration results are detailed in Table \ref{tab:calib}. During physical verification, the vehicle executed the programmed movement commands reliably. Figure \ref{fig:assembled_car} shows the fully assembled 4WD robot car, and Figure \ref{fig:glove} shows the transmitter glove.\par
+The accelerometer and gyroscope sensors were calibrated to establish threshold limits. We recorded orientation outputs for neutral, tilt forward, tilt backward, tilt left, and tilt right positions. Calibration results are detailed in Table \ref{tab:calib}. During physical verification, the vehicle executed the programmed movement commands reliably. Figure \ref{fig:assembled_car} shows the fully assembled 4WD robot car, and Figure \ref{fig:glove} shows the receiver unit. The final physically realized transmitter unit is shown in Figure \ref{fig:final_transmitter}, and the completed receiver unit mounted on the car chassis is shown in Figure \ref{fig:final_receiver}.\par
 \vspace{0.1in}
 \begin{center}
 \begingroup
@@ -679,33 +679,45 @@ Right Tilt & 310 -- 350 & $>$ 370 & Steer Right \\ \hline
 \begin{minipage}{0.48\textwidth}
   \centering
   \includegraphics[width=\textwidth,height=6.5cm,keepaspectratio=true]{images/img2.jpeg}
-  \captionof{figure}{Wearable Control Glove}
+  \captionof{figure}{Receiver}
   \label{fig:glove}
 \end{minipage}
 \end{center}
+\vspace{0.15in}
+\begin{center}
+\includegraphics[width=0.75\textwidth,height=8.5cm,keepaspectratio=true]{images/final_transmitter.png}
+\captionof{figure}{Final Transmitter Assembly}
+\label{fig:final_transmitter}
+\end{center}
+\vspace{0.15in}
+\begin{center}
+\includegraphics[width=0.75\textwidth,height=8.5cm,keepaspectratio=true]{images/final_receiver_on_car.png}
+\captionof{figure}{Final Receiver Mounted on Car}
+\label{fig:final_receiver}
+\end{center}
 
 \section{Performance Evaluation}
-The prototype was evaluated on latency, range, and battery life. The ESP-NOW system achieved a latency of 8 ms and a reliable range of 45 m. A 2200 mAh 18650 battery pack provides 45 minutes of continuous operation. Figures \ref{fig:wiring}, \ref{fig:test}, and \ref{fig:battery} show the wiring, test, and battery mount setup.\par
+The prototype was evaluated on latency, range, and battery life. The ESP-NOW system achieved a latency of 8 ms and a reliable range of 45 m. A 2200 mAh 18650 battery pack provides 45 minutes of continuous operation. Figures \ref{fig:wiring}, \ref{fig:test}, and \ref{fig:battery} show the 4WD car and two views of the transmitter setup.\par
 \vspace{0.1in}
 \begin{center}
 \begin{minipage}{0.31\textwidth}
   \centering
   \includegraphics[width=\textwidth,height=5.5cm,keepaspectratio=true]{images/img3.jpeg}
-  \captionof{figure}{Wiring Details}
+  \captionof{figure}{4WD Car}
   \label{fig:wiring}
 \end{minipage}
 \hfill
 \begin{minipage}{0.31\textwidth}
   \centering
   \includegraphics[width=\textwidth,height=5.5cm,keepaspectratio=true]{images/img4.jpeg}
-  \captionof{figure}{Circuit Test}
+  \captionof{figure}{Transmitter View 1}
   \label{fig:test}
 \end{minipage}
 \hfill
 \begin{minipage}{0.31\textwidth}
   \centering
   \includegraphics[width=\textwidth,height=5.5cm,keepaspectratio=true]{images/img5.jpeg}
-  \captionof{figure}{Battery Mount}
+  \captionof{figure}{Transmitter View 2}
   \label{fig:battery}
 \end{minipage}
 \end{center}
