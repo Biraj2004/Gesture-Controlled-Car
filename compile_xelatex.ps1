@@ -29,17 +29,35 @@ $texFileName = $texFile.Name
 $pdfFileName = "$baseName.pdf"
 $pdfPath = Join-Path $scriptDir $pdfFileName
 
-# Locate xelatex: check PATH first, fall back to TinyTeX if not found on PATH.
+# Locate xelatex: check PATH first, then standard MiKTeX/TinyTeX locations, or auto-install via winget
 $xelatex = Get-Command xelatex -ErrorAction SilentlyContinue
 if ($xelatex) {
     $xelatexExe = $xelatex.Source
 } else {
-    $tinytex = Join-Path $env:APPDATA "TinyTeX\bin\windows\xelatex.exe"
-    if (Test-Path $tinytex) {
-        $xelatexExe = $tinytex
+    $miktexBin = "$env:LOCALAPPDATA\Programs\MiKTeX\miktex\bin\x64\xelatex.exe"
+    $tinytexBin = "$env:APPDATA\TinyTeX\bin\windows\xelatex.exe"
+    if (Test-Path $miktexBin) {
+        $xelatexExe = $miktexBin
+    } elseif (Test-Path $tinytexBin) {
+        $xelatexExe = $tinytexBin
     } else {
-        Write-Error "xelatex not found on PATH or in TinyTeX default location. Please install TeX Live, MiKTeX, or TinyTeX."
-        exit 1
+        Write-Host "WARNING: xelatex was not found on your system." -ForegroundColor Yellow
+        Write-Host "Attempting automatic installation of MiKTeX via winget..." -ForegroundColor Cyan
+        $winget = Get-Command winget -ErrorAction SilentlyContinue
+        if ($winget) {
+            winget install --id MiKTeX.MiKTeX --silent --accept-package-agreements --accept-source-agreements
+            # Re-check location after winget install
+            if (Test-Path $miktexBin) {
+                $xelatexExe = $miktexBin
+            } else {
+                $xelatex = Get-Command xelatex -ErrorAction SilentlyContinue
+                if ($xelatex) { $xelatexExe = $xelatex.Source }
+            }
+        }
+        if (-not $xelatexExe) {
+            Write-Error "xelatex could not be found or automatically installed. Please download and install MiKTeX manually from https://miktex.org/download"
+            exit 1
+        }
     }
 }
 
