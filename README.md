@@ -149,7 +149,7 @@ This repository includes a complete academic documentation pipeline tailored for
 - **Viva Voce Examination Booklet**: [`Gesture-Controlled-Car-VivaBooklet.tex`](file:///e:/01.%20GitHub%20Repo%20Projects/Gesture-Controlled-Car/Gesture-Controlled-Car-VivaBooklet.tex) (compiles to [`Gesture-Controlled-Car-VivaBooklet.pdf`](file:///e:/01.%20GitHub%20Repo%20Projects/Gesture-Controlled-Car/Gesture-Controlled-Car-VivaBooklet.pdf)).
 
 ### Universal Guides & Core Specifications
-- **Universal XeLaTeX Report Construction Guide**: [`biraj-xelatex-universal-report-guide.md`](file:///e:/01.%20GitHub%20Repo%20Projects/Gesture-Controlled-Car/biraj-xelatex-universal-report-guide.md) — A domain-agnostic, step-by-step master guide for humans and AI agents (such as Antigravity / Gemini) to build publication-grade, professionally accepted academic project reports on **ANY subject or domain** for **ANY college or university worldwide** from absolute scratch. Features:
+- **Universal XeLaTeX Report Construction Guide**: [`biraj-xelatex-universal-report_build-guide.md`](file:///e:/01.%20GitHub%20Repo%20Projects/Gesture-Controlled-Car/biraj-xelatex-universal-report_build-guide.md) — A domain-agnostic, step-by-step master guide for humans and AI agents (such as Antigravity / Gemini) to build publication-grade, professionally accepted academic project reports on **ANY subject or domain** for **ANY college or university worldwide** from absolute scratch. Features:
   - Zero-to-PDF From Scratch Workflow
   - Automatic MiKTeX Detection & `winget` Silent Installer
   - Root `images/` Directory Management & Native Insertion
@@ -190,7 +190,7 @@ Gesture-Controlled-Car/
 ├── Gesture-Controlled-Car-VivaBooklet.tex         # Viva Voce Examination Guide (XeLaTeX)
 ├── Gesture-Controlled-Car-VivaBooklet.pdf         # Compiled Viva Booklet PDF
 │
-├── biraj-xelatex-universal-report-guide.md      # Universal Report Construction Guide (Markdown)
+├── biraj-xelatex-universal-report_build-guide.md # Universal Report Construction Guide (Markdown)
 ├── biraj-xelatex-general-specs.md                # XeLaTeX formatting reference rules
 │
 ├── Gesture-Controlled-Car-Presentation-Final.pptx# Project Defense Slides (PPTX)
